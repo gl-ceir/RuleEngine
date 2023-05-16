@@ -18,12 +18,13 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+////
 //@SpringBootApplication
 public class BasicApplication {
 
-     static final Logger logger = Logger.getLogger(BasicApplication.class);
+     static final Logger logger = LogManager.getLogger(BasicApplication.class);
      private static final String KEYSTOREPATH = "/home/ubuntu/CEIR/GSMA_CLIENT/gsma_ks.jks"; // or .p12
      private static final String KEYSTOREPASS = "Hello1234";
      private static final String KEYPASS = "keypass";

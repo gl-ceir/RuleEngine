@@ -9,12 +9,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import org.apache.log4j.Logger;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 class GsmaDbDao {
 
-    static final Logger logger = Logger.getLogger(GsmaDbDao.class);
+    static final Logger logger = LogManager.getLogger(GsmaDbDao.class);
 
     public String databaseMapper(String message, Connection conn) {
 
@@ -22,7 +22,6 @@ class GsmaDbDao {
         try {
             stmt = conn.createStatement();
         } catch (SQLException ex) {
-            java.util.logging.Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
         }
         try {
             logger.debug("databaseMapper.");
@@ -35,14 +34,14 @@ class GsmaDbDao {
 //            String now = dtf.format(now1);
             String getDeviceCertifybody = product.getDeviceCertifybody().contains("[") ? product.getDeviceCertifybody().replace("[", " ") : product.getDeviceCertifybody();
             getDeviceCertifybody = getDeviceCertifybody.contains("]") ? getDeviceCertifybody.replace("]", " ") : getDeviceCertifybody;
-            logger.debug("gsma_tac_db getDeviceCertifybody ...." + getDeviceCertifybody);
+            logger.debug("app.gsma_valid_tac getDeviceCertifybody ...." + getDeviceCertifybody);
             String getOperatingSystem = product.getOperatingSystem().contains("[") ? product.getOperatingSystem().replace("[", " ") : product.getOperatingSystem();
             getOperatingSystem = getOperatingSystem.contains("]") ? getOperatingSystem.replace("]", " ") : getOperatingSystem;
-            logger.debug("gsma_tac_db getOperatingSystem ...." + getOperatingSystem);
+            logger.debug("app.gsma_valid_tac getOperatingSystem ...." + getOperatingSystem);
             String getRadioInterface = product.getRadioInterface().contains("[") ? product.getRadioInterface().replace("[", " ") : product.getRadioInterface();
             getRadioInterface = getRadioInterface.contains("]") ? getRadioInterface.replace("]", " ") : getRadioInterface;
-            logger.debug("gsma_tac_db getRadioInterface ...." + getRadioInterface);
-            String sqlqry = "insert into  gsma_tac_db ( created_on, status_message,  device_id, band_name ,model_name,internal_model_name ,marketing_name,equipment_type ,sim_support,"
+            logger.debug("app.gsma_valid_tac getRadioInterface ...." + getRadioInterface);
+            String sqlqry = "insert into  app.gsma_valid_tac ( created_on, status_message,  device_id, band_name ,model_name,internal_model_name ,marketing_name,equipment_type ,sim_support,"
                     + " nfc ,    wlan,bluetooth  ,lpwan  ,manufacturer_or_applicant, tac_approved_date , gsma_approved_tac, operating_system , device_certify_body , radio_interface ,  status_code , brand_name , modified_on, brand_name_new , model_name_new ) "
                     + "  Values ( " + now + "  , "
                     + " '" + product.getStatusMessage() + "', '" + product.getDeviceId() + "', "
@@ -97,7 +96,7 @@ class GsmaDbDao {
         Statement stmt = null;
         try {
             stmt = conn.createStatement();
-            String qry = " select count(id) from gsma_tac_db where  device_id = '" + imeiTac + "'  ";
+            String qry = " select count(id) from app.gsma_valid_tac where  device_id = '" + imeiTac + "'  ";
             resultmsdn = stmt.executeQuery(qry);
             try {
                 while (resultmsdn.next()) {
@@ -107,7 +106,7 @@ class GsmaDbDao {
                 logger.error("Database1  " + e);
             }
             if (resultid == 0) {
-                qry = " select count(tac) from gsma_invalid_tac_db where  tac = '" + imeiTac + "'  ";
+                qry = " select count(tac) from app.gsma_invalid_tac where  tac = '" + imeiTac + "'  ";
                 resultmsdn = stmt.executeQuery(qry);
                 try {
                     while (resultmsdn.next()) {
@@ -149,10 +148,9 @@ class GsmaDbDao {
             try {
                 stmt = conn.createStatement();
             } catch (SQLException ex) {
-                java.util.logging.Logger.getLogger(GsmaDbDao.class.getName()).log(Level.SEVERE, null, ex);
             }
-            stmt.executeQuery("insert into gsma_invalid_tac_db (created_on , tac  ,modified_on  ) values ( current_timestamp  , '" + deviceId + "', current_timestamp  )    ");
-            logger.debug("IMEI is not GsmaApprovedTac...  " + "insert into gsma_invalid_tac_db (created_on , tac , modifiedON) values ( current_timestamp  , '" + deviceId + "' , current_timestamp   )    ");
+            stmt.executeQuery("insert into app.gsma_invalid_tac (created_on , tac  ,modified_on  ) values ( current_timestamp  , '" + deviceId + "', current_timestamp  )    ");
+            logger.debug("IMEI is not GsmaApprovedTac...  " + "insert into app.gsma_invalid_tac (created_on , tac , modifiedON) values ( current_timestamp  , '" + deviceId + "' , current_timestamp   )    ");
         } catch (Exception e) {
             logger.error("Error + " + e);
         } finally {

@@ -8,8 +8,8 @@ import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import org.apache.log4j.Logger;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 public class EncriptonService {
 
 //	static String APIKey = "ZqXBvdRLYRiAWCO";
@@ -17,7 +17,7 @@ public class EncriptonService {
 //	static String Salt_String = "GSMA";
 //	static String Organization_Id = "9101";
 //	static String Secretkey = "imeaesencryption";
-     static final Logger logger = Logger.getLogger(EncriptonService.class);
+     static final Logger logger = LogManager.getLogger(EncriptonService.class);
 
      public static String getAuth(String deviceId, String APIKey, String Password, String Salt_String, String Organization_Id, String Secretkey) {
           String abc = getSHA(APIKey + Password + deviceId);
