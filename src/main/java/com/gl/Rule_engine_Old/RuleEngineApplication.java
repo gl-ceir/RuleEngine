@@ -14,6 +14,11 @@ public class RuleEngineApplication {
         String reslt = ""; 
 
         if ("1".equalsIgnoreCase(args[1])) {
+
+            if ("TEST_IMEI".equalsIgnoreCase(args[0])) {
+                reslt = TEST_IMEI.executeRule(args, conn);
+            }
+
             if ("LBD".equalsIgnoreCase(args[0])) {
                 reslt = LBD.executeRule(args, conn);
             }
@@ -139,6 +144,9 @@ public class RuleEngineApplication {
 
         if ("2".equalsIgnoreCase(args[1])) {
 
+            if ("TEST_IMEI".equalsIgnoreCase(args[0])) {
+                reslt = TEST_IMEI.executeAction(args, conn, bw);
+            }
             if ("LBD".equalsIgnoreCase(args[0])) {
                 reslt = LBD.executeAction(args, conn, bw);
             }

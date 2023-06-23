@@ -31,6 +31,7 @@ public class EXISTS_IN_GSMA_DETAILS_DB {
         try {
             stmt = conn.createStatement();
                 String query = "select count(device_id) from app.mobile_device_repository  where device_id='" + args[3].substring(0, 8) + "' ";
+                logger.info("[" + query +"]");
                 result = stmt.executeQuery(query);
                 try {
                     while (result.next()) {

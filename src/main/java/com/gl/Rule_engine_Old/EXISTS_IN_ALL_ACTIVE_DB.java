@@ -9,8 +9,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.io.BufferedWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,8 +27,8 @@ class EXISTS_IN_ALL_ACTIVE_DB {
         ResultSet result1 = null;
         String res = null;
         try {
-            String qry = "select sum(cnt) from   (select count(imei) as cnt  from app.active_unique_imei where imei = '" + args[3] + "' and MSISDN = '" + args[12] + "'   union select count(imei)  as cnt from app.active_imei_with_different_msisdn where imei = '" + args[3] + "' and MSISDN = '" + args[12] + "' ) a  ";
-            logger.info("Query " + qry);
+            String qry = "select sum(cnt) from   (select count(imei) as cnt  from active_unique_imei where imei = '" + args[3] + "' and MSISDN = '" + args[12] + "'   union select count(imei)  as cnt from active_imei_with_different_msisdn where imei = '" + args[3] + "' and MSISDN = '" + args[12] + "' ) a  ";
+            logger.info("Query  [" + qry  +   "]"  );
             stmt2 = conn.createStatement();
             result1 = stmt2.executeQuery(qry);
             int res1 = 0;
@@ -36,7 +36,7 @@ class EXISTS_IN_ALL_ACTIVE_DB {
                 while (result1.next()) {
                     res1 = result1.getInt(1);
                 }
-                logger.info("result " + res1);
+                logger.info("result [" + res1  + " ]"  );
 
             } catch (Exception e) {
                 logger.error("" + e);

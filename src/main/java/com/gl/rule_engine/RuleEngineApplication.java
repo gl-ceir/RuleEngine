@@ -24,7 +24,6 @@ public class RuleEngineApplication {
                 }, (cumulative, intermediate) -> {
                     return intermediate;
                 });
-
     }
 }
 //        stream .reduce( (Integer a, Integer b) -> a * b) 

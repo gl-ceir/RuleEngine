@@ -19,17 +19,18 @@ class IMEI_LUHN_CHECK {
      static final Logger logger = LogManager.getLogger(IMEI_LUHN_CHECK.class);
 
      static String executeRule(String[] args, Connection conn) {
-          String res = "Yes";
-          if (args[9].trim().equalsIgnoreCase("IMEI") || args[10].trim().equalsIgnoreCase("GSM")) {
-               if (args[3].length() == 16) {
-                    res = "Yes";
-               } else {
-                    res = ExecuteLuhnAlgorithm(args[3]);
-               }
-          } else {
-               res = "Yes";
-          }
-          return res;
+//          String res = "Yes";
+//          if (args[9].trim().equalsIgnoreCase("IMEI") || args[10].trim().equalsIgnoreCase("GSM")) {
+//               if (args[3].length() == 16) {
+//                    res = "Yes";
+//               } else {
+//                    res = ExecuteLuhnAlgorithm(args[3]);
+//               }
+//          } else {
+//               res = "Yes";
+//          }
+//          return res;
+         return ExecuteLuhnAlgorithm(args[3]);
      }
 
      static String executeAction(String[] args, Connection conn, BufferedWriter bw) {
