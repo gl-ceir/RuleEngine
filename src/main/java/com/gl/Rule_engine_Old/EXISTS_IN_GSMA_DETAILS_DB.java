@@ -25,10 +25,15 @@ public class EXISTS_IN_GSMA_DETAILS_DB {
     static final Logger logger = LogManager.getLogger(EXISTS_IN_GSMA_DETAILS_DB.class);
 
     static String executeRule(String[] args, Connection conn) {
+        if (args[3].length() < 8) {
+            logger.info("length less than 8 ->" + args[3].length());
+            return "No";
+        }
         Statement stmt = null;
         ResultSet result = null;
         String res = "0";
         try {
+            logger.info("[Starting]");
             stmt = conn.createStatement();
                 String query = "select count(device_id) from app.mobile_device_repository  where device_id='" + args[3].substring(0, 8) + "' ";
                 logger.info("[" + query +"]");
@@ -48,13 +53,13 @@ public class EXISTS_IN_GSMA_DETAILS_DB {
                 result.close();
                 stmt.close();
         } catch (Exception e) {
-            logger.debug("error.." + e);
+            logger.error("error.." + e);
         } finally {
             try {
                 result.close();
                 stmt.close();
             } catch (Exception ex) {
-                logger.error("Error" + ex);
+                logger.error("Error for Finally " + ex);
             }
         }
         return res;

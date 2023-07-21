@@ -11,9 +11,13 @@ public class RuleEngineApplication {
     static final Logger logger = LogManager.getLogger(RuleEngineApplication.class);
 
     public static String startRuleEngine(String[] args, Connection conn, BufferedWriter bw) {
-        String reslt = ""; 
+        String reslt = "";
 
         if ("1".equalsIgnoreCase(args[1])) {
+
+            if ("NATIONAL_WHITELISTS".equalsIgnoreCase(args[0])) {
+                reslt = NATIONAL_WHITELISTS.executeRule(args, conn);
+            }
 
             if ("TEST_IMEI".equalsIgnoreCase(args[0])) {
                 reslt = TEST_IMEI.executeRule(args, conn);
@@ -143,6 +147,10 @@ public class RuleEngineApplication {
         }
 
         if ("2".equalsIgnoreCase(args[1])) {
+
+            if ("NATIONAL_WHITELISTS".equalsIgnoreCase(args[0])) {
+                reslt = NATIONAL_WHITELISTS.executeAction(args, conn, bw);
+            }
 
             if ("TEST_IMEI".equalsIgnoreCase(args[0])) {
                 reslt = TEST_IMEI.executeAction(args, conn, bw);

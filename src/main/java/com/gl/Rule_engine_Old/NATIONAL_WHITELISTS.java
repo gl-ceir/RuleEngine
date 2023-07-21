@@ -4,12 +4,10 @@
  */
 package com.gl.Rule_engine_Old;
 
-import static com.gl.Rule_engine_Old.EXISTS_IN_GREYLIST_DB.logger;
 import java.io.BufferedWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -17,26 +15,18 @@ import org.apache.logging.log4j.Logger;
  *
  * @author maverick
  */
-public class TEST_IMEI {
+public class NATIONAL_WHITELISTS {
 
-    static final Logger logger = LogManager.getLogger(IMEI_NULL.class);
+    static final Logger logger = LogManager.getLogger(NATIONAL_WHITELISTS.class);
 
     static String executeRule(String[] args, Connection conn) {
-        String value = ""; //  001 / 0044
         String res = "No";
-        String query = "select value from sys_param where tag= 'TEST_IMEI_SERIES' ";
+        String query = "select count(*) from national_whitelist where imei like '" + args[3] + "%' ";
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query);) {
             while (rs.next()) {
-                value = rs.getString("value");
+                res = "Yes";
             }
-            logger.info("Test imei vals from db " + value);
-            String[] arr = value.split(",");
-            for (String testImeiSeries : arr) {
-                if (args[3].startsWith(testImeiSeries)) {
-                    res = "Yes";
-                }
-            }
-            logger.info("Is imei : " + args[3] + " A Test imei : " + res);
+            logger.info("value from db " + res);
         } catch (Exception e) {
             logger.error("Error.." + e);
         }
@@ -65,15 +55,7 @@ public class TEST_IMEI {
                 break;
                 case "Report": {
                     logger.debug("Action is Report");
-                    try (Statement stmt = conn.createStatement();) {
 
-                        String qur = " insert into test_imei_details  (imei ,IMSI,  msisdn , record_type , system_type , source,raw_cdr_file_name,imei_arrival_time ,operator, file_name , created_on , modified_on    )  values "
-                                + "('" + args[3] + "' , '" + args[14] + "', '" + args[12] + "' ,'" + args[15] + "' , '" + args[16] + "',  '" + args[17] + "', '" + args[18] + "', '" + args[19] + "', '" + args[20] + "',   '" + args[21] + "', now(),  now()   ) ";
-                        logger.info(".test_imei_details ::Report ." + qur);
-                        stmt.executeUpdate(qur);
-                    } catch (Exception e) {
-                        logger.debug("Error " + e);
-                    }
                 }
                 break;
                 case "Report2": {
