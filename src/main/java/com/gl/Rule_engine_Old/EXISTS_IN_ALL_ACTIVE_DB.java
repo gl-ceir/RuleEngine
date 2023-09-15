@@ -36,8 +36,6 @@ class EXISTS_IN_ALL_ACTIVE_DB {
                 while (result1.next()) {
                     res1 = result1.getInt(1);
                 }
-                logger.info("result [" + res1  + " ]"  );
-
             } catch (Exception e) {
                 logger.error("" + e);
             }
