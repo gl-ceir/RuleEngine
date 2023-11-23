@@ -4,17 +4,8 @@
  */
 package com.gl.rule_engine;
 
-
-import com.gl.rule_engine.rules.DUPLICATE_USAGE_CHECK;
-import com.gl.rule_engine.rules.EXISTS_IN_ALL_ACTIVE_DB;
-import com.gl.rule_engine.rules.EXISTS_IN_GREYLIST_DB;
-import com.gl.rule_engine.rules.EXISTS_IN_GSMA_DETAILS_DB;
-import com.gl.rule_engine.rules.EXISTS_IN_GSMA_TAC_DB;
-import com.gl.rule_engine.rules.EXISTS_IN_USAGE_DB;
-import com.gl.rule_engine.rules.EXIST_IN_GSMABLACKLIST_DB;
-import com.gl.rule_engine.rules.IMEI_LENGTH;
+import com.gl.rule_engine.rules.*;
 import java.util.List;
-
 
 public interface RulesClass {
 
@@ -27,7 +18,40 @@ public interface RulesClass {
                 new DUPLICATE_USAGE_CHECK(),
                 new EXISTS_IN_GREYLIST_DB(),
                 new EXIST_IN_GSMABLACKLIST_DB(),
-                new EXISTS_IN_ALL_ACTIVE_DB()
+                new EXISTS_IN_ALL_ACTIVE_DB(), // done
+
+                new EXIST_REGULARIZED(),
+                new IMEI_LUHN_CHECK(),
+                new EXIST_IN_BLACKLIST_DB(),
+                new IMEI_NULL(),
+                new EXIST_IN_CUSTOM_DB(),
+                new EXISTS_IN_FOREIGN_DB(),
+                new LBD(),
+                new EXIST_IN_DISTRIBUTOR_DB(),
+                new NATIONAL_WHITELISTS(),
+                new EXIST_IN_END_USER_DB(),
+                new EXIST_IN_END_USER_DEVICE_DB(),
+                new SAME_DEVICETYPE_RECOVERY(),
+                new EXISTS_IN_REGULARIZED_DB(),
+                new SAME_DEVICETYPE_UNBLOCK(),
+                new EXIST_IN_IMPORTER_DB(),
+                new EXISTS_IN_TYPE_APPROVED_DB(),
+                new SAME_OPERATOR_UNBLOCK(),
+                new EXIST_IN_LAWFUL_DB(),
+                new EXISTS_IN_TYPE_APPROVED_TAC(),
+                new SAME_SERIAL_RECOVERY(),
+                new EXIST_IN_MANUFACTURER_DB(),
+                new SAME_SERIAL_UNBLOCK(),
+                new EXIST_IN_OPERATOR_DB(),
+                new EXISTS_IN_WHITELIST_DB(),
+                new SYS_REG(),
+                new EXIST_IN_RETAILER_DB(),
+                new TAC_FORMAT(),
+                new EXIST_IN_TAX_PAID_DB(),
+                new FOREIGN_SIM(),
+                new TEST_IMEI(),
+                new EXIST_IN_VIP_LIST(),
+                new USER_REG()
         );
     }
 }
