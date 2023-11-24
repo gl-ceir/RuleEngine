@@ -1,8 +1,10 @@
+package com.gl.Rule_engine_Old;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.gl.Rule_engine_Old;
+
 
 import java.io.BufferedWriter;
 import java.sql.Connection;
@@ -11,21 +13,18 @@ import java.sql.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
-
 /**
  *
  * @author maverick
  */
-public class NATIONAL_WHITELISTS implements RuleEngineInterface{
+public class NATIONAL_WHITELISTS {
 
     static final Logger logger = LogManager.getLogger(NATIONAL_WHITELISTS.class);
-    @Override
-    static String executeRule(RuleEngine ruleEngine) {
+
+    static String executeRule(String[] args, Connection conn) {
         String res = "No";
-        String query = "select count(*) from national_whitelist where imei like '" + ruleEngine.imei + "%' ";
-        try (Statement stmt = ruleEngine.connection.createStatement(); ResultSet rs = stmt.executeQuery(query);) {
+        String query = "select count(*) from national_whitelist where imei like '" + args[3] + "%' ";
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query);) {
             while (rs.next()) {
                 res = "Yes";
             }
@@ -35,12 +34,11 @@ public class NATIONAL_WHITELISTS implements RuleEngineInterface{
         }
         return res;
     }
-    
-    @Override
-    static String executeAction(RuleEngine ruleEngine) {
+
+    static String executeAction(String[] args, Connection conn, BufferedWriter bw) {
         try {
-            logger.debug("Action::: " + ruleEngine.action);
-            switch (ruleEngine.action) {
+            logger.debug("Action::: " + args[13]);
+            switch (args[13]) {
                 case "Allow": {
                     logger.debug("Action is Allow");
                 }
@@ -51,7 +49,7 @@ public class NATIONAL_WHITELISTS implements RuleEngineInterface{
                 break;
                 case "Reject": {
                     logger.debug("Action is Reject");
-                    String fileString = ruleEngine.fileArray + " ,Error Code :CON_RULE_0019, Error Description : IMEI/ESN/MEID is already present in the system  ";
+                    String fileString = args[15] + " ,Error Code :CON_RULE_0019, Error Description : IMEI/ESN/MEID is already present in the system  ";
                     bw.write(fileString);
                     bw.newLine();
 
@@ -75,7 +73,7 @@ public class NATIONAL_WHITELISTS implements RuleEngineInterface{
                 }
                 break;
                 default:
-                    logger.debug(" The Action " + ruleEngine.action + "  is Not Defined  ");
+                    logger.debug(" The Action " + args[13] + "  is Not Defined  ");
             }
 
             return "Success";
