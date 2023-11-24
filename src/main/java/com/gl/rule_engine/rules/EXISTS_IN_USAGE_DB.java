@@ -30,8 +30,8 @@ public class EXISTS_IN_USAGE_DB implements  RuleEngineInterface {
           ResultSet result1 = null;
         try {
               stmt2 = ruleEngine.connection.createStatement();
-              result1 = stmt2.executeQuery("select count(imei_esn_meid) as cnt  from device_usage_db  where imei_esn_meid='" + ruleEngine.imei + "' ");
-            logger.debug("select count(imei_esn_meid) as cnt  from device_usage_db  where imei_esn_meid='" + ruleEngine.imei + "' ");
+              result1 = stmt2.executeQuery("select count(imei) as cnt  from active_unique_imei  where imei='" + ruleEngine.imei + "' ");
+            logger.debug("select count(imei) as cnt  from active_unique_imei  where imei='" + ruleEngine.imei + "' ");
             int res1 = 0;
             try {
                 while (result1.next()) {

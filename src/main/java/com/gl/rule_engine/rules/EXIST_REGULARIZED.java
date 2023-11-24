@@ -26,8 +26,8 @@ public class EXIST_REGULARIZED implements  RuleEngineInterface{
         {
             try {
                   stmt2 = ruleEngine.connection.createStatement();
-                  result1 = stmt2.executeQuery("select action, msisdn from device_usage_db  where imei_esn_meid='" + ruleEngine.imei + "' ");
-                logger.debug("select action, msisdn from device_usage_db  where imei_esn_meid='" + ruleEngine.imei + "' ");
+                  result1 = stmt2.executeQuery("select action, msisdn from active_unique_imei  where imei='" + ruleEngine.imei + "' ");
+                logger.debug("select action, msisdn from active_unique_imei  where imei='" + ruleEngine.imei + "' ");
                 String actn = "";
                 String msdn = "";
                 try {
@@ -71,8 +71,8 @@ public class EXIST_REGULARIZED implements  RuleEngineInterface{
         try {
 
             Statement stmt3 = ruleEngine.connection.createStatement();
-            ResultSet result3 = stmt3.executeQuery("select action from device_duplicate_db  where imei_esn_meid='" + ruleEngine.imei + "'    and msisdn = '" + ruleEngine.msisdn + "' ");
-            logger.debug("select action from device_duplicate_db  where imei_esn_meid='" + ruleEngine.imei + "'    and msisdn = '" + ruleEngine.msisdn + "' ");
+            ResultSet result3 = stmt3.executeQuery("select action from active_imei_with_different_msisdn  where imei='" + ruleEngine.imei + "'    and msisdn = '" + ruleEngine.msisdn + "' ");
+            logger.debug("select action from active_imei_with_different_msisdn  where imei='" + ruleEngine.imei + "'    and msisdn = '" + ruleEngine.msisdn + "' ");
             String actn3 = "";
             try {
                 while (result3.next()) {

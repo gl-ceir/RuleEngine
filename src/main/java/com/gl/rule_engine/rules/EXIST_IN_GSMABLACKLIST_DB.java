@@ -24,7 +24,7 @@ public class EXIST_IN_GSMABLACKLIST_DB implements RuleEngineInterface {
         String rslt = EncriptonBlacklistService.startBlacklistApp(ruleEngine.imei, ruleEngine.connection);
         return rslt;
     }
-
+    @Override
     public String executeAction(RuleEngine ruleEngine) {
 
         try {

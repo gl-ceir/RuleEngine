@@ -33,8 +33,8 @@ public class DUPLICATE_USAGE_CHECK implements RuleEngineInterface {
           ResultSet result4 = null;
           try {
                     stmt2 = ruleEngine.connection.createStatement();
-                    result1 = stmt2.executeQuery("select count( imei) as c1  from device_usage_db where imei='" + ruleEngine.imei + "' ");
-                    logger.debug(" select count( msisdn) as c1  from device_usage_db where imei='" + ruleEngine.imei + "'");
+                    result1 = stmt2.executeQuery("select count( imei) as c1  from active_unique_imei where imei='" + ruleEngine.imei + "' ");
+                    logger.debug(" select count( msisdn) as c1  from active_unique_imei where imei='" + ruleEngine.imei + "'");
                     int res1 = 0;
                     try {
                          while (result1.next()) {
@@ -45,10 +45,10 @@ public class DUPLICATE_USAGE_CHECK implements RuleEngineInterface {
                     }
                     result1.close();
                     stmt2.close();
-                    logger.debug("device_usage_db count:" + res1);
+                    logger.debug("active_unique_imei count:" + res1);
                     stmt3 = ruleEngine.connection.createStatement();
-                    logger.debug(" select count(msisdn) as c1  from device_duplicate_db where imei='" + ruleEngine.imei + "' ");
-                    result3 = stmt3.executeQuery("  select count(imei) as c1  from device_duplicate_db where imei='" + ruleEngine.imei + "' ");
+                    logger.debug(" select count(msisdn) as c1  from active_imei_with_different_msisdn where imei='" + ruleEngine.imei + "' ");
+                    result3 = stmt3.executeQuery("  select count(imei) as c1  from active_imei_with_different_msisdn where imei='" + ruleEngine.imei + "' ");
                     int res3 = 0;
                     try {
                          while (result3.next()) {
@@ -59,11 +59,11 @@ public class DUPLICATE_USAGE_CHECK implements RuleEngineInterface {
                     }
                     result3.close();
                     stmt3.close();
-                    logger.debug("device_duplicate_db count:" + res3);
+                    logger.debug("active_imei_with_different_msisdn count:" + res3);
                     int ttl = res1 + res3;
                     logger.debug("Total  count: " + ttl);
                     stmt4 = ruleEngine.connection.createStatement();
-                    result4 = stmt4.executeQuery("Select  value from system_configuration_db where tag='DUPLICATE_IMEI_USAGE_COUNT'");
+                    result4 = stmt4.executeQuery("Select  value from sys_param where tag='DUPLICATE_IMEI_USAGE_COUNT'");
                     int res4 = 0;
                     try {
                          while (result4.next()) {
@@ -72,7 +72,7 @@ public class DUPLICATE_USAGE_CHECK implements RuleEngineInterface {
                     } catch (Exception e) {
                          logger.error("" + e);
                     }
-                    logger.debug("Select  value from system_configuration_db where tag='DUPLICATE_IMEI_USAGE_COUNT'  .... " + res4);
+                    logger.debug("Select  value from sys_param where tag='DUPLICATE_IMEI_USAGE_COUNT'  .... " + res4);
                     if (res4 <= ttl) {
                          res = "Yes";
                     } else {

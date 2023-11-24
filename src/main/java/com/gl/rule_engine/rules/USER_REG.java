@@ -30,7 +30,7 @@ public class USER_REG implements  RuleEngineInterface{
           try {
 
                stmt2 = ruleEngine.connection.createStatement();
-               String qury = " select action from device_usage_db  where  imei ='" + ruleEngine.imei + "'   union  select action from  device_duplicate_db  where  imei =   '" + ruleEngine.imei + "'  ";
+               String qury = " select action from active_unique_imei  where  imei ='" + ruleEngine.imei + "'   union  select action from  active_imei_with_different_msisdn  where  imei =   '" + ruleEngine.imei + "'  ";
                result1 = stmt2.executeQuery(qury);
                logger.debug(qury);
                Set<String> hash_Set = new HashSet<String>();

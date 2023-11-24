@@ -24,7 +24,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class SAME_OPERATOR_UNBLOCK implements  RuleEngineInterface{
 
-    static final Logger logger = LogManager.getLogger(SYS_REG.class);
+    static final Logger logger = LogManager.getLogger(SAME_OPERATOR_UNBLOCK.class);
 
     @Override
      public String executeRule(RuleEngine ruleEngine)  {

@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class EXISTS_IN_FOREIGN_DB implements  RuleEngineInterface {
 
-     static final Logger logger = LogManager.getLogger(EXIST_IN_CUSTOM_DB.class);
+     static final Logger logger = LogManager.getLogger(EXISTS_IN_FOREIGN_DB.class);
 
      @Override
      public String executeRule(RuleEngine ruleEngine)  {
@@ -31,7 +31,7 @@ public class EXISTS_IN_FOREIGN_DB implements  RuleEngineInterface {
 
                stmt2 = ruleEngine.connection.createStatement();
 
-               String qry = "select count(regularize_device_db.nid) from regularize_device_db inner join end_userdb on end_userdb.nid=regularize_device_db.nid where "
+               String qry = "select count(regularize_device_db.nid) from regularize_device_db inner join end_user_info on end_user_info.nid=regularize_device_db.nid where "
                        + " first_imei='" + ruleEngine.imei + "' or second_imei='" + ruleEngine.imei + "' or third_imei='" + ruleEngine.imei + "' or fourth_imei='" + ruleEngine.imei + "' and nationality<>'Cambodian'  ";
                logger.debug(" Foreign Db " + qry);
                result1 = stmt2.executeQuery(qry);

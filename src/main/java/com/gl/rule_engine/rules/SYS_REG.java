@@ -33,7 +33,7 @@ public class SYS_REG implements  RuleEngineInterface{
           String qury = null;
           try {
                stmt2 = ruleEngine.connection.createStatement();
-               qury = " select action from device_usage_db  where  imei ='" + ruleEngine.imei + "'";
+               qury = " select action from active_unique_imei  where  imei ='" + ruleEngine.imei + "'";
               logger.debug("" + qury);
                result1 = stmt2.executeQuery(qury);
                try {
@@ -46,7 +46,7 @@ public class SYS_REG implements  RuleEngineInterface{
                if (actnRslt.equals("SYS_REG")) {
                     res = "Yes";
                } else {
-                    qury = " select action from device_duplicate_db  where  imei ='" + ruleEngine.imei + "'";
+                    qury = " select action from active_imei_with_different_msisdn  where  imei ='" + ruleEngine.imei + "'";
                     logger.debug("" + qury);
            
                     result1 = stmt2.executeQuery(qury);

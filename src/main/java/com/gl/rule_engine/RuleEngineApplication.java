@@ -15,7 +15,7 @@ public class RuleEngineApplication {
                 .map(RuleEngineInterface.class::cast)
                 .reduce(new String(), (result, ruleNode) -> {
                     String key = ruleEngine.executeRuleAction;
-                    if (key.contains("1")) {
+                    if (key.contains("executeRule")) {
                         result = ruleNode.executeRule(ruleEngine);
                     } else {
                         result = ruleNode.executeAction(ruleEngine);
