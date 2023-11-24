@@ -5,25 +5,25 @@
  */
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import java.sql.Connection;
 import java.io.BufferedWriter;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author user
  */
-public class SAME_SERIAL_RECOVERY implements  RuleEngineInterface{
+public class SAME_SERIAL_RECOVERY implements  ExecutionInterface{
 
     static final Logger logger = LogManager.getLogger(SAME_SERIAL_RECOVERY.class);
 
     @Override
-     public String executeRule(RuleEngine ruleEngine)  {
+     public String executeRule(RuleInfo ruleEngine)  {
         String res = "";
         Statement stmt = null;
         ResultSet result = null;
@@ -73,7 +73,7 @@ public class SAME_SERIAL_RECOVERY implements  RuleEngineInterface{
     }
 
     @Override
-     public String executeAction(RuleEngine ruleEngine)  {
+     public String executeAction(RuleInfo ruleEngine)  {
         try {
             switch (ruleEngine.action) {
                 case "Allow": {

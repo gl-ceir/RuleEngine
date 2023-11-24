@@ -5,25 +5,25 @@
  */
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement; 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
 
 /**
  *
  * @author user
  */
-public class DUPLICATE_USAGE_CHECK implements RuleEngineInterface {
+public class DUPLICATE_USAGE_CHECK implements ExecutionInterface {
 
      static final Logger logger = LogManager.getLogger(DUPLICATE_USAGE_CHECK.class);
 
      @Override
-     public String executeRule(RuleEngine ruleEngine)  {
+     public String executeRule(RuleInfo ruleEngine)  {
           String res = null;
           Statement stmt2 = null;
           ResultSet result1 = null;
@@ -107,7 +107,7 @@ public class DUPLICATE_USAGE_CHECK implements RuleEngineInterface {
      }
 
      @Override
-     public String executeAction(RuleEngine ruleEngine)  {
+     public String executeAction(RuleInfo ruleEngine)  {
           try {
                switch (ruleEngine.action) {
                     case "Allow": {

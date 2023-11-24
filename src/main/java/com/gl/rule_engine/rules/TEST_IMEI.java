@@ -10,19 +10,19 @@ import java.sql.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author maverick
  */
-public class TEST_IMEI implements RuleEngineInterface{
+public class TEST_IMEI implements ExecutionInterface{
 
     static final Logger logger = LogManager.getLogger(TEST_IMEI.class);
     
     @Override
-    public String executeRule(RuleEngine ruleEngine) {
+    public String executeRule(RuleInfo ruleEngine) {
         String value = ""; //  001 / 0044
         String res = "No";
         String query = "select value from sys_param where tag= 'TEST_IMEI_SERIES' ";
@@ -44,7 +44,7 @@ public class TEST_IMEI implements RuleEngineInterface{
         return res;
     }
     @Override
-    public String executeAction(RuleEngine ruleEngine) {
+    public String executeAction(RuleInfo ruleEngine) {
         try {
             logger.debug("Action::: " + ruleEngine.action);
             switch (ruleEngine.action) {

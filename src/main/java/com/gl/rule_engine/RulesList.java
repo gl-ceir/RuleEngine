@@ -7,7 +7,7 @@ package com.gl.rule_engine;
 import com.gl.rule_engine.rules.*;
 import java.util.List;
 
-public interface RulesClass {
+public interface RulesList {
 
     static List<Object> getItems() {
         return List.of(
@@ -19,7 +19,6 @@ public interface RulesClass {
                 new EXISTS_IN_GREYLIST_DB(),
                 new EXIST_IN_GSMABLACKLIST_DB(),
                 new EXISTS_IN_ALL_ACTIVE_DB(), // done
-
                 new EXIST_REGULARIZED(),
                 new IMEI_LUHN_CHECK(),
                 new EXIST_IN_BLACKLIST_DB(),

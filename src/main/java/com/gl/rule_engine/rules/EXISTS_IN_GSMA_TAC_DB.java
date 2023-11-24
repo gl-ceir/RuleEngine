@@ -7,24 +7,24 @@ package com.gl.rule_engine.rules;
 
 //import com.example.BasicApplication;
  
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import gsmaTac.BasicApplication;
 import java.sql.Connection;
 import java.io.BufferedWriter;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author user
  */
-public class EXISTS_IN_GSMA_TAC_DB implements  RuleEngineInterface {     // EXISTS_IN_GSMA_TAC_DB used in TYPE APPROVE TOO
+public class EXISTS_IN_GSMA_TAC_DB implements  ExecutionInterface {     // EXISTS_IN_GSMA_TAC_DB used in TYPE APPROVE TOO
 
     static final Logger logger = LogManager.getLogger(EXISTS_IN_GSMA_TAC_DB.class);
 
     @Override
-     public String executeRule(RuleEngine ruleEngine)  {
+     public String executeRule(RuleInfo ruleEngine)  {
         String res = "No";
         logger.debug("EXISTS_IN_GSMA_TAC executeRule");
         try {
@@ -46,7 +46,7 @@ public class EXISTS_IN_GSMA_TAC_DB implements  RuleEngineInterface {     // EXIS
         return res;
     }
 
-    public String executeAction(RuleEngine ruleEngine) {
+    public String executeAction(RuleInfo ruleEngine) {
       try{  switch (ruleEngine.action) {
             case "Allow": {
                 logger.debug("Action is Allow");

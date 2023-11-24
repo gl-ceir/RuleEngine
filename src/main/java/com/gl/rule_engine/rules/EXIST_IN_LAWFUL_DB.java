@@ -5,25 +5,25 @@
  */
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.io.BufferedWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author user
  */
-public  class EXIST_IN_LAWFUL_DB implements  RuleEngineInterface {
+public  class EXIST_IN_LAWFUL_DB implements  ExecutionInterface {
 
      static final Logger logger = LogManager.getLogger(EXIST_IN_LAWFUL_DB.class);
 
        @Override
-     public String executeRule(RuleEngine ruleEngine)  {
+     public String executeRule(RuleInfo ruleEngine)  {
           Statement stmt = null;
           ResultSet result2 = null;
           String res = "No";
@@ -62,7 +62,7 @@ public  class EXIST_IN_LAWFUL_DB implements  RuleEngineInterface {
      }
 
      @Override
-     public String executeAction(RuleEngine ruleEngine)  {
+     public String executeAction(RuleInfo ruleEngine)  {
 //        logger.debug("LBD executeAction");
           try {
                switch (ruleEngine.action) {

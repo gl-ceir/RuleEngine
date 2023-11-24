@@ -5,23 +5,23 @@
  */
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import java.sql.Connection;
 import java.io.BufferedWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author user
  */
-public class IMEI_LENGTH implements  RuleEngineInterface{
+public class IMEI_LENGTH implements  ExecutionInterface{
 
      static final Logger logger = LogManager.getLogger(IMEI_LENGTH.class);
 
      @Override
-     public String executeRule(RuleEngine ruleEngine) {
+     public String executeRule(RuleInfo ruleEngine) {
           String res = "Yes";
           System.out.println("IMEI_LENGTH executeRule ....." +ruleEngine.imei);
           try {
@@ -119,7 +119,7 @@ public class IMEI_LENGTH implements  RuleEngineInterface{
 
        
      @Override
-     public String executeAction(RuleEngine ruleEngine) {
+     public String executeAction(RuleInfo ruleEngine) {
    
           try {
                switch (ruleEngine.action) {

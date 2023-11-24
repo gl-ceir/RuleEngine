@@ -4,28 +4,26 @@ package com.gl.rule_engine.rules;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
-import java.io.BufferedWriter;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author maverick
  */
-public class NATIONAL_WHITELISTS implements RuleEngineInterface{
+public class NATIONAL_WHITELISTS implements ExecutionInterface {
 
     static final Logger logger = LogManager.getLogger(NATIONAL_WHITELISTS.class);
+
     @Override
-    public String executeRule(RuleEngine ruleEngine) {
+    public String executeRule(RuleInfo ruleEngine) {
         String res = "No";
-        String query = "select count(*) from national_whitelist where imei like '" + ruleEngine.imei + "%' ";
+        String query = "select count(*) from  " + ruleEngine.app + ".national_whitelist where imei like '" + ruleEngine.imei + "%' ";
         try (Statement stmt = ruleEngine.connection.createStatement(); ResultSet rs = stmt.executeQuery(query);) {
             while (rs.next()) {
                 res = "Yes";
@@ -36,9 +34,9 @@ public class NATIONAL_WHITELISTS implements RuleEngineInterface{
         }
         return res;
     }
-    
+
     @Override
-    public String executeAction(RuleEngine ruleEngine) {
+    public String executeAction(RuleInfo ruleEngine) {
         try {
             logger.debug("Action::: " + ruleEngine.action);
             switch (ruleEngine.action) {
