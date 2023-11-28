@@ -4,7 +4,12 @@
  */
 package com.gl.rule_engine;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class RuleEngineApplication {
+
+    static final Logger logger = LogManager.getLogger(RuleEngineApplication.class);
 
     public static String startRuleEngine(RuleInfo ruleEngine) {
 

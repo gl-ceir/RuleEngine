@@ -37,6 +37,9 @@ public class RuleInfo {
     public String aud;
     public String rep;
 
+    public RuleInfo() {
+    }
+
     public RuleInfo(String app, String aud, String rep, String ruleName, String executeRuleAction, String featureName, String imei, String sNofDevice, String fileName, String deviceType, String operator, String deviceIdType, String operatorTag, String msisdn, String action, String imsi, String recordType, String systemType, String source, String rawCdrFileName, String imeiArrivalTime, String txn_id, String fileArray, String period, Connection connection, BufferedWriter bw) {
         this.app = app;
         this.aud = aud;
