@@ -3,9 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.gl.Rule_engine_old.BlackList;
+package com.gl.BlackList.Dao;
 
-import com.gl.utils.Util;
+import com.gl.BlackList.model.BlacklistTacDb;
+import com.gl.BlackList.model.BlacklistTacDeviceDetailsDb;
+import com.gl.BlackList.model.BlacklistTacDeviceHistoryDb;
 import com.google.gson.Gson;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -13,16 +15,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.logging.Level;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 /**
  *
  * @author user
  */
-public class BlacklistServiceImpl {
+public class BlacklistServiceDao {
 
-     static final Logger logger = LogManager.getLogger(BlacklistServiceImpl.class);
+     static final Logger logger = LogManager.getLogger(BlacklistServiceDao.class);
 
      public String databaseMapper(String message, Connection conn) {
 
@@ -84,7 +85,7 @@ public class BlacklistServiceImpl {
                     resultmsdn.close();
                     stmt.close();
                } catch (SQLException ex) {
-                    java.util.logging.Logger.getLogger(BlacklistServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    java.util.logging.Logger.getLogger(BlacklistServiceDao.class.getName()).log(Level.SEVERE, null, ex);
                }
           }
           return iid;
@@ -104,12 +105,12 @@ public class BlacklistServiceImpl {
 
 //               stmt.close ();
           } catch (Exception e) {
-               logger.debug(" ERrorr" + e);
+               logger.debug(" error" + e);
           } finally {
                try {
                     stmt.close();
                } catch (SQLException ex) {
-                    java.util.logging.Logger.getLogger(BlacklistServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    java.util.logging.Logger.getLogger(BlacklistServiceDao.class.getName()).log(Level.SEVERE, null, ex);
                }
           }
 
@@ -136,12 +137,12 @@ public class BlacklistServiceImpl {
                try {
                     stmt.close();
                } catch (Exception ex) {
-                    java.util.logging.Logger.getLogger(BlacklistServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    java.util.logging.Logger.getLogger(BlacklistServiceDao.class.getName()).log(Level.SEVERE, null, ex);
                }
           }
      }
 
-     String getBlacklistStatus(Connection conn, String Imei) {
+    public String getBlacklistStatus(Connection conn, String Imei) {
           String stats = "NA";
           Statement stmt = null;
           ResultSet rs0 = null;
@@ -181,44 +182,61 @@ public class BlacklistServiceImpl {
                     rs1.close();
                     stmt.close();
                } catch (Exception ex) {
-                    java.util.logging.Logger.getLogger(BlacklistServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    java.util.logging.Logger.getLogger(BlacklistServiceDao.class.getName()).log(Level.SEVERE, null, ex);
                }
           }
 
           return stats;
      }
 
-     String getBlacklistUrl(Connection conn) {
-          String stats = null;
-          Statement stmt = null;
-          ResultSet rs0 = null;
-          ResultSet rs1 = null;
-          String query = null;
-
-          try {
-               query = "  select value  from system_configuration_db where tag = 'GSMA_BLACKLIST_URL' ";
-               logger.debug("Query  [" + query + "]");
-               stmt = conn.createStatement();
-               rs0 = stmt.executeQuery(query);
+//     public String getBlacklistUrl(Connection conn) {
+//          String stats = null;
+//          Statement stmt = null;
+//          ResultSet rs0 = null;
+//          ResultSet rs1 = null;
+//          String query = null;
+//
+//          try {
+//               query = "  select value  from system_configuration_db where tag = 'GSMA_BLACKLIST_URL' ";
+//               logger.debug("Query  [" + query + "]");
+//               stmt = conn.createStatement();
+//               rs0 = stmt.executeQuery(query);
+//               while (rs0.next()) {
+//                    stats = rs0.getString(1);
+//               }
+//               stmt.close();
+//               logger.debug("  BlacklistSTatuss url " + stats);
+//
+//          } catch (Exception e) {
+//               logger.debug("Error at   getBlack listStatus" + e);
+//          } finally {
+//               try {
+//                    rs0.close();
+//                    rs1.close();
+//                    stmt.close();
+//               } catch (Exception ex) {
+//                    java.util.logging.Logger.getLogger(BlacklistServiceDao.class.getName()).log(Level.SEVERE, null, ex);
+//               }
+//          }
+//          return stats;
+//     }
+     
+     
+     
+     
+     
+      public String getValueFromSysParam(Connection conn,String tag) {
+          String query = "  select value  from sys_param  where tag = '"+tag+"' ";
+          String response = null;
+          try(Statement stmt= conn.createStatement();  ResultSet rs0 =  stmt.executeQuery(query);) {
                while (rs0.next()) {
-                    stats = rs0.getString(1);
+                    response = rs0.getString(1);
                }
-               stmt.close();
-               logger.debug("  BlacklistSTatuss url " + stats);
-
           } catch (Exception e) {
                logger.debug("Error at   getBlack listStatus" + e);
-          } finally {
-               try {
-                    rs0.close();
-                    rs1.close();
-                    stmt.close();
-               } catch (Exception ex) {
-                    java.util.logging.Logger.getLogger(BlacklistServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-               }
-          }
-          return stats;
      }
+           return response;
+}
 }
 
 //     void insertInvalidTac(Connection conn, BlacklistTacDb blacklistTacDb) {

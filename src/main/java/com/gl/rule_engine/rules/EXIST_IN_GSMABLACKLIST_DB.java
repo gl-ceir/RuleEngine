@@ -5,11 +5,11 @@
  */
 package com.gl.rule_engine.rules;
 
-import com.gl.Rule_engine_old.BlackList.EncriptonBlacklistService;
+import com.gl.BlackList.EncriptonBlacklistService;
+import com.gl.rule_engine.ExecutionInterface;
 import com.gl.rule_engine.RuleInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
@@ -21,7 +21,7 @@ public class EXIST_IN_GSMABLACKLIST_DB implements ExecutionInterface {
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String rslt = EncriptonBlacklistService.startBlacklistApp(ruleEngine.imei, ruleEngine.connection);
+        String rslt = EncriptonBlacklistService.startBlacklistApp(ruleEngine);
         return rslt;
     }
     @Override

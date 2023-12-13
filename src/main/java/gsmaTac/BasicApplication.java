@@ -5,7 +5,6 @@ import com.google.gson.Gson;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.sql.Connection;
-
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -42,6 +41,7 @@ public class BasicApplication {
 
           GsmaDbDao snt = new GsmaDbDao();
           String status = "Yes";
+          String logpath = "";
           if (imei_tac.length() != 8) {
 //            status = " ";
                logger.error("DeviceId should be 1st 8 digits of an IMEI");
@@ -60,9 +60,11 @@ public class BasicApplication {
                     Secretkey = map.get("gsma_tac_Secretkey");
                     httpPostUrl = map.get("gsma_tac_httpPostUrl");
                     gsma_tac_timewait = map.get("gsma_tac_timewait");
+                    logpath=map.get("gsma_tac_response_log_path");
                     logger.debug("httpPostUrl  " + httpPostUrl);
                     int timewait = Integer.parseInt(gsma_tac_timewait);
-                    logWriter.writeLogGsma("Start imei_tac is " + imei_tac);
+                    
+                    logWriter.writeLogGsma(logpath,"Start imei_tac is " + imei_tac);
                     BasicApplication obj = new BasicApplication();
                     SSLContext sslContext = SSLContexts.custom()
                             .loadKeyMaterial(obj.readStore(), KEYPASS.toCharArray())
@@ -81,7 +83,7 @@ public class BasicApplication {
                          public void run() {
                               if (request != null) {
                                    request.abort();
-                                   logWriter.writeLogGsma("Request TimeOut");
+                                   logWriter.writeLogGsma("","Request TimeOut"); // required logpath
                               } else {
                               }
                          }
@@ -93,7 +95,7 @@ public class BasicApplication {
                          HttpEntity entity = response.getEntity();
                          message = EntityUtils.toString(response.getEntity());
                          EntityUtils.consume(entity);
-                         logWriter.writeLogGsma("End Result for  " + imei_tac + " :: " + message);
+                         logWriter.writeLogGsma(logpath,"End Result for  " + imei_tac + " :: " + message);
                          Gson gson = new Gson();
                          GsmaEntity product = gson.fromJson(message, GsmaEntity.class);
                          if (product.getGsmaApprovedTac().equals("Yes")) {
@@ -105,7 +107,7 @@ public class BasicApplication {
                               status = "No";
                          }
                     } catch (Exception e) {
-                         logWriter.writeLogGsma("Error in Getting Connection.." + e);
+                         logWriter.writeLogGsma(logpath,"Error in Getting Connection.." + e);
                          logger.debug("ITS NAN.." + e);
                          status = "NAN";
                     }finally{

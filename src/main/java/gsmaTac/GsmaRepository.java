@@ -3,13 +3,11 @@ package gsmaTac;
 import com.gl.utils.Util;
 import com.google.gson.Gson;
 import java.sql.Connection;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 class GsmaDbDao {
@@ -168,7 +166,7 @@ class GsmaDbDao {
         ResultSet result = null;
         try {
             stmt = conn.createStatement();
-            String str = " select tag , value from system_configuration_db where tag in ('gsma_tac_APIKey' , 'gsma_tac_Password','gsma_tac_Salt_String' , 'gsma_tac_Organization_Id' ,'gsma_tac_Secretkey', 'gsma_tac_httpPostUrl',  'gsma_tac_timewait')  ";
+            String str = " select tag , value from system_configuration_db where tag in ('gsma_tac_APIKey' , 'gsma_tac_Password','gsma_tac_Salt_String' , 'gsma_tac_Organization_Id' ,'gsma_tac_Secretkey', 'gsma_tac_httpPostUrl',  'gsma_tac_timewait' , 'gsma_tac_response_log_path')  ";
             result = stmt.executeQuery(str);
             logger.debug("  " + str);
             while (result.next()) {

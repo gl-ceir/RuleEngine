@@ -8,7 +8,6 @@ package com.gl.Rule_engine_Old;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.gl.Rule_engine_old.BlackList.EncriptonBlacklistService;
 import java.sql.Connection;
 import java.io.BufferedWriter;
 
@@ -19,8 +18,8 @@ import java.io.BufferedWriter;
 public class EXIST_IN_GSMABLACKLIST_DB {
     static final Logger logger = LogManager.getLogger(EXIST_IN_GSMABLACKLIST_DB.class);
     static String executeRule(String[] args, Connection conn) {
-        String rslt = EncriptonBlacklistService.startBlacklistApp(args[3], conn);
-        return rslt;
+       // String rslt = EncriptonBlacklistService.startBlacklistApp(args[3], conn);
+        return null;
     }
 
     static String executeAction(String[] args, Connection conn,  BufferedWriter bw) {

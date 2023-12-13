@@ -1,19 +1,16 @@
 package com.gl.utils;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.io.BufferedWriter;
 import java.text.DateFormat;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class LogWriter {
 
-    final String logPath = "/home/maverick/Desktop";
-
-    public boolean writeLogBlacklist(String log) {
+    public boolean writeLogBlacklist(String logPath,String log) {
         boolean result = false;
         PrintWriter pw = null;
         File file = null;
@@ -50,7 +47,7 @@ public class LogWriter {
         return result;
     }
 
-    public boolean writeLogGsma(String log) {
+    public boolean writeLogGsma(String logPath,String log) {
         boolean result = false;
         PrintWriter pw = null;
         File file = null;
