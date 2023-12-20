@@ -1,10 +1,14 @@
 package com.gl.BlackList;
 
 import com.gl.BlackList.Dao.BlacklistServiceDao;
+import com.gl.BlackList.model.BlacklistTacDb;
 import com.gl.rule_engine.RuleInfo;
 import com.gl.utils.LogWriter;
+import com.google.gson.Gson;
 import java.net.URI;
 import java.security.MessageDigest;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.time.Duration;
 import java.util.Base64;
 import javax.crypto.Cipher;
@@ -18,34 +22,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-
-//@Component
+ 
 public class EncriptonBlacklistService {
 
     static final Logger logger = LogManager.getLogger(EncriptonBlacklistService.class);
     static Cipher cipher;
-
-//    static String APIKey = "A459000091616";
-//    static String Password = "7v50d1501";
-//    static String Salt_String = "DCDW";
-//    static String Organization_Id = "505";
-//    static String Secretkey = "GSMAESencryption";
-    // static String url = "https://devicecheck.gsma.com/imeirtl/leadclookup" ;
 
     public static String startBlacklistApp(RuleInfo re) {
         LogWriter logWriter = new LogWriter();
         String status = null;
         BlacklistServiceDao blacklist = new BlacklistServiceDao();
         String rslt = blacklist.getBlacklistStatus(re.connection, re.imei);
-        if (rslt.equalsIgnoreCase("NA")) {
-          String logpath = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_API_RESPONSE_LOG");
-            logWriter.writeLogBlacklist(logpath,"Start with Imei " + re.imei);
+        if (rslt == null) {
+            String logpath = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_LogPath");
+            logWriter.writeLogBlacklist(logpath, "Start with Imei " + re.imei);
             String message = verifyGSMA(re);
-            if (message.equalsIgnoreCase("NAN")) {
-                status = "NAN";
+            logWriter.writeLogBlacklist(logpath, "End Result for  " + re.imei + " :: " + message);
+            BlacklistTacDb blacklistTacDb = (new Gson().fromJson(message, BlacklistTacDb.class));
+            if (blacklistTacDb.getResponsestatus().equalsIgnoreCase("success")) {
+                status = blacklist.databaseMapper(blacklistTacDb, re.connection);
             } else {
-                logWriter.writeLogBlacklist(logpath,"End Result for  " + re.imei + " :: " + message);
-                status = blacklist.databaseMapper(message, re.connection);
+                logger.warn("Not able to retrieve info for imei  =" + re.imei + ", Response: " + message);
             }
         } else {
             status = rslt;
@@ -60,9 +57,10 @@ public class EncriptonBlacklistService {
         String APIKey = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_APIKey");
         String Password = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_Password");
         String Salt_String = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_Salt_String");
+        String Secretkey = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_Secretkey");
+        String partnerid = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_Partnerid");
         String Organization_Id = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_Organization_Id");
 
-        String Secretkey = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_Secretkey");
         String abc = getSHA(APIKey + Password + re.imei);
         String auth = encrypt(Salt_String + Organization_Id + "=" + abc, Secretkey);
         logger.debug("the auth key is =" + auth);
@@ -82,9 +80,10 @@ public class EncriptonBlacklistService {
             headers = new HttpHeaders();
             headers.setContentType(org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED);
             headers.set("Authorisation", auth);
-
             map = new LinkedMultiValueMap<>();
             map.add("deviceid", re.imei);
+            map.add("partnerid", partnerid);
+
             request = new HttpEntity<>(map, headers);
 
             httpResponse = restTemplate.postForEntity(uri, request, String.class);
@@ -113,7 +112,6 @@ public class EncriptonBlacklistService {
                 }
                 hashValue.append(hex);
             }
-
             return hashValue.toString();
         } catch (Exception e) {
             e.printStackTrace();
