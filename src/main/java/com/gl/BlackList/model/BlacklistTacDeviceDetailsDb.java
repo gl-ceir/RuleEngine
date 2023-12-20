@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.gl.Rule_engine_old.BlackList;
+package com.gl.BlackList.model;
 
 import java.io.Serializable;
 
@@ -14,7 +14,7 @@ import java.io.Serializable;
 
 //@Entity
 
-class BlacklistTacDeviceDetailsDb implements Serializable {
+public class BlacklistTacDeviceDetailsDb implements Serializable {
 
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -5,8 +5,7 @@
  */
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import com.gl.utils.Util;
 import java.sql.Connection;
 
@@ -15,8 +14,9 @@ import java.sql.Statement;
 import java.io.BufferedWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
-public class FOREIGN_SIM implements  RuleEngineInterface{
+public class FOREIGN_SIM implements  ExecutionInterface{
 
      static final Logger logger = LogManager.getLogger(FOREIGN_SIM.class);
 
@@ -29,7 +29,7 @@ public class FOREIGN_SIM implements  RuleEngineInterface{
 //                    return "Yes";
 //                } 
      @Override
-     public String executeRule(RuleEngine ruleEngine)  {
+     public String executeRule(RuleInfo ruleEngine)  {
           String res = "No";
           try {
                String msisdn = ruleEngine.msisdn.startsWith("19") ? ruleEngine.msisdn.substring(2) : ruleEngine.msisdn;
@@ -47,7 +47,7 @@ public class FOREIGN_SIM implements  RuleEngineInterface{
      }
 
      @Override
-     public String executeAction(RuleEngine ruleEngine)  {
+     public String executeAction(RuleInfo ruleEngine)  {
 
           try {
                switch (ruleEngine.action) {

@@ -5,32 +5,30 @@
  */
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
-import java.sql.Connection;
-import java.io.BufferedWriter;
+import com.gl.rule_engine.RuleInfo;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author user
  */
-public class EXISTS_IN_GREYLIST_DB implements  RuleEngineInterface {
+public class EXISTS_IN_GREYLIST_DB implements ExecutionInterface {
 
     static final Logger logger = LogManager.getLogger(EXISTS_IN_GREYLIST_DB.class);
 
     @Override
-     public String executeRule(RuleEngine ruleEngine)  {
+    public String executeRule(RuleInfo ruleEngine) {
         String res = "";
         Statement stmt2 = null;
         ResultSet result1 = null;
         try {
             stmt2 = ruleEngine.connection.createStatement();
-            logger.info("select count(imei ) from app.greylist where imei='" + ruleEngine.imei + "' ");
-            result1 = stmt2.executeQuery("select count(imei) from app.greylist  where imei ='" + ruleEngine.imei + "' ");
+            logger.info("select count(imei ) from  " + ruleEngine.app + ".greylist where imei='" + ruleEngine.imei + "' ");
+            result1 = stmt2.executeQuery("select count(imei) from  " + ruleEngine.app + ".greylist  where imei ='" + ruleEngine.imei + "' ");
             String res2 = "0";
             try {
                 while (result1.next()) {
@@ -63,7 +61,7 @@ public class EXISTS_IN_GREYLIST_DB implements  RuleEngineInterface {
     }
 
     @Override
-     public String executeAction(RuleEngine ruleEngine)  {
+    public String executeAction(RuleInfo ruleEngine) {
         try {
             switch (ruleEngine.action) {
                 case "Allow": {
@@ -88,7 +86,7 @@ public class EXISTS_IN_GREYLIST_DB implements  RuleEngineInterface {
                     try {
                         Statement stmt = ruleEngine.connection.createStatement();
                         String qur = " insert into blocked_device_db  (imei ,IMSI,  msisdn , record_type , system_type , source,raw_cdr_file_name,imei_arrivalTime ,operator, file_name , created_on , modified_on    )  values "
-                                + "('" + ruleEngine.imei + "' , '" + ruleEngine.imsi+ "', '" + ruleEngine.msisdn + "' ,'" + ruleEngine.recordType + "' , '" + ruleEngine.systemType + "',  '" + ruleEngine.source + "', '" + ruleEngine.rawCdrFileName + "', '" + ruleEngine.imeiArrivalTime + "', '" + ruleEngine.operator + "',   '" + ruleEngine.fileName + "', current_timestamp,  current_timestamp   ) ";
+                                + "('" + ruleEngine.imei + "' , '" + ruleEngine.imsi + "', '" + ruleEngine.msisdn + "' ,'" + ruleEngine.recordType + "' , '" + ruleEngine.systemType + "',  '" + ruleEngine.source + "', '" + ruleEngine.rawCdrFileName + "', '" + ruleEngine.imeiArrivalTime + "', '" + ruleEngine.operator + "',   '" + ruleEngine.fileName + "', current_timestamp,  current_timestamp   ) ";
                         logger.info(".." + qur);
                         stmt.executeUpdate(qur);
                         stmt.close();

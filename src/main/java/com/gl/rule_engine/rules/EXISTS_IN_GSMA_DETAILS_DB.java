@@ -9,25 +9,25 @@ package com.gl.rule_engine.rules;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.io.BufferedWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author user
  */
-public class EXISTS_IN_GSMA_DETAILS_DB implements RuleEngineInterface {
+public class EXISTS_IN_GSMA_DETAILS_DB implements ExecutionInterface {
 
     static final Logger logger = LogManager.getLogger(EXISTS_IN_GSMA_DETAILS_DB.class);
 
     @Override
-    public String executeRule(RuleEngine ruleEngine) {
+    public String executeRule(RuleInfo ruleEngine) {
         System.out.println("EXISTS_IN_GSMA_DETAILS_DB works only");
         Statement stmt = null;
         ResultSet result = null;
@@ -65,7 +65,7 @@ public class EXISTS_IN_GSMA_DETAILS_DB implements RuleEngineInterface {
 
        @Override
   
-    public String executeAction(RuleEngine ruleEngine) {
+    public String executeAction(RuleInfo ruleEngine) {
         try {
             switch (ruleEngine.action) {
                 case "Allow": {

@@ -5,32 +5,28 @@
  */
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
-import java.sql.Connection;
+import com.gl.rule_engine.RuleInfo;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.io.BufferedWriter;
-import java.sql.SQLException;
-import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author user
  */
-public class EXISTS_IN_ALL_ACTIVE_DB implements  RuleEngineInterface {
+public class EXISTS_IN_ALL_ACTIVE_DB implements ExecutionInterface {
 
     static final Logger logger = LogManager.getLogger(EXISTS_IN_ALL_ACTIVE_DB.class);
 
     @Override
-     public String executeRule(RuleEngine ruleEngine)  {
+    public String executeRule(RuleInfo ruleEngine) {
         Statement stmt2 = null;
         ResultSet result1 = null;
         String res = null;
         try {
-            String qry = "select sum(cnt) from   (select count(imei) as cnt  from app.active_unique_imei where imei = '" + ruleEngine.imei + "' and MSISDN = '" + ruleEngine.msisdn + "'   union select count(imei)  as cnt from app.active_imei_with_different_msisdn where imei = '" + ruleEngine.imei + "' and MSISDN = '" + ruleEngine.msisdn + "' ) a  ";
+            String qry = "select sum(cnt) from   (select count(imei) as cnt  from " + ruleEngine.app + ".active_unique_imei where imei = '" + ruleEngine.imei + "' and MSISDN = '" + ruleEngine.msisdn + "'   union select count(imei)  as cnt from app.active_imei_with_different_msisdn where imei = '" + ruleEngine.imei + "' and MSISDN = '" + ruleEngine.msisdn + "' ) a  ";
             logger.info("Query " + qry);
             stmt2 = ruleEngine.connection.createStatement();
             result1 = stmt2.executeQuery(qry);
@@ -66,7 +62,7 @@ public class EXISTS_IN_ALL_ACTIVE_DB implements  RuleEngineInterface {
     }
 
     @Override
-     public String executeAction(RuleEngine ruleEngine)  {
+    public String executeAction(RuleInfo ruleEngine) {
         try {
             switch (ruleEngine.action) {
                 case "Allow": {
@@ -117,7 +113,7 @@ public class EXISTS_IN_ALL_ACTIVE_DB implements  RuleEngineInterface {
 //        logger.debug("EXISTS_IN_USAGE_DB executeAction");
 ////        if (ruleEngine.featureName.equalsIgnoreCase("CDR")) {
 ////            logger.debug("Error Not for CDR");
-////        } else 
+////        } else
 //        {
 //              Map<String, String> map = new HashMap<String, String>();
 //            map.put("fileName", ruleEngine.txn_id);
@@ -133,10 +129,10 @@ public class EXISTS_IN_ALL_ACTIVE_DB implements  RuleEngineInterface {
 //EXISTS_IN_USAGE_DB - Other than CDR - Expected O/P no.
 //Execute Rule
 //select count(*) as cnt  from device_usage_db where imei ='XXXXXXX';
-//if cnt >0 
+//if cnt >0
 //then
 //	return yes
-//else 
+//else
 //	return no
 //
 //Execute Action

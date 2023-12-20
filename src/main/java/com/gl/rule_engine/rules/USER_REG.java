@@ -5,8 +5,7 @@
  */
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import java.sql.Connection;
 import java.io.BufferedWriter;
 import java.sql.ResultSet;
@@ -15,13 +14,14 @@ import java.util.HashSet;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
  
-public class USER_REG implements  RuleEngineInterface{
+public class USER_REG implements  ExecutionInterface{
 
      static final Logger logger = LogManager.getLogger(USER_REG.class);
 
      @Override
-     public String executeRule(RuleEngine ruleEngine)  {
+     public String executeRule(RuleInfo ruleEngine)  {
 //        logger.debug(" USER_REG executeRule ");
           String res = "";
           ResultSet result1 = null;
@@ -30,7 +30,7 @@ public class USER_REG implements  RuleEngineInterface{
           try {
 
                stmt2 = ruleEngine.connection.createStatement();
-               String qury = " select action from device_usage_db  where  imei ='" + ruleEngine.imei + "'   union  select action from  device_duplicate_db  where  imei =   '" + ruleEngine.imei + "'  ";
+               String qury = " select action from active_unique_imei  where  imei ='" + ruleEngine.imei + "'   union  select action from  active_imei_with_different_msisdn  where  imei =   '" + ruleEngine.imei + "'  ";
                result1 = stmt2.executeQuery(qury);
                logger.debug(qury);
                Set<String> hash_Set = new HashSet<String>();
@@ -65,7 +65,7 @@ public class USER_REG implements  RuleEngineInterface{
      }
 
      @Override
-     public String executeAction(RuleEngine ruleEngine)  {
+     public String executeAction(RuleInfo ruleEngine)  {
           try {
                switch (ruleEngine.action) {
                     case "Allow": {

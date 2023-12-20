@@ -5,23 +5,23 @@
  */
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import java.sql.Connection;
 import java.io.BufferedWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author user
  */
-public class IMEI_NULL implements RuleEngineInterface {
+public class IMEI_NULL implements ExecutionInterface {
 
     static final Logger logger = LogManager.getLogger(IMEI_NULL.class);
 
     @Override
-    public String executeRule(RuleEngine ruleEngine) {
+    public String executeRule(RuleInfo ruleEngine) {
         String res = "";
         try {
             if ((ruleEngine.imei == null) || ruleEngine.imei == "" || ruleEngine.imei.contains("00000000")) {
@@ -36,7 +36,7 @@ public class IMEI_NULL implements RuleEngineInterface {
     }
 
     @Override
-    public String executeAction(RuleEngine ruleEngine) {
+    public String executeAction(RuleInfo ruleEngine) {
         String res = "Success";
         try {
             {

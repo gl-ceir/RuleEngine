@@ -5,8 +5,7 @@
  */
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,17 +16,18 @@ import java.io.BufferedWriter;
 import java.util.Calendar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author user
  */
-public class EXISTS_IN_TYPE_APPROVED_DB implements  RuleEngineInterface {
+public class EXISTS_IN_TYPE_APPROVED_DB implements  ExecutionInterface {
 
      static final Logger logger = LogManager.getLogger(EXISTS_IN_TYPE_APPROVED_DB.class);
 
      @Override
-     public String executeRule(RuleEngine ruleEngine)  {
+     public String executeRule(RuleInfo ruleEngine)  {
           String res = "";
           Statement stmt2 = null;
           ResultSet result1 = null;
@@ -61,7 +61,7 @@ public class EXISTS_IN_TYPE_APPROVED_DB implements  RuleEngineInterface {
      }
 
      @Override
-     public String executeAction(RuleEngine ruleEngine)  {
+     public String executeAction(RuleInfo ruleEngine)  {
           try {
                switch (ruleEngine.action) {
                     case "Allow": {

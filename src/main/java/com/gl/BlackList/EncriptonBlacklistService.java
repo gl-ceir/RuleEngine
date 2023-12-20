@@ -1,23 +1,23 @@
-package com.gl.Rule_engine_old.BlackList;
+package com.gl.BlackList;
 
+import com.gl.BlackList.Dao.BlacklistServiceDao;
+import com.gl.rule_engine.RuleInfo;
+import com.gl.utils.LogWriter;
 import java.net.URI;
 import java.security.MessageDigest;
+import java.time.Duration;
 import java.util.Base64;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-//import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import com.gl.utils.LogWriter;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;import java.sql.Connection;
-import java.time.Duration;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 
 //@Component
 public class EncriptonBlacklistService {
@@ -25,31 +25,27 @@ public class EncriptonBlacklistService {
     static final Logger logger = LogManager.getLogger(EncriptonBlacklistService.class);
     static Cipher cipher;
 
-    static String APIKey = "A459000091616";
-    static String Password = "7v50d1501";
-    static String Salt_String = "DCDW";
-    static String Organization_Id = "505";
-    static String Secretkey = "GSMAESencryption";
+//    static String APIKey = "A459000091616";
+//    static String Password = "7v50d1501";
+//    static String Salt_String = "DCDW";
+//    static String Organization_Id = "505";
+//    static String Secretkey = "GSMAESencryption";
     // static String url = "https://devicecheck.gsma.com/imeirtl/leadclookup" ;
 
-    public static String startBlacklistApp(String Imei, Connection conn) {
+    public static String startBlacklistApp(RuleInfo re) {
         LogWriter logWriter = new LogWriter();
         String status = null;
-        BlacklistServiceImpl lacklistServiceImpl = new BlacklistServiceImpl();
-        String rslt = lacklistServiceImpl.getBlacklistStatus(conn, Imei);
-        String url = lacklistServiceImpl.getBlacklistUrl(conn);
-
+        BlacklistServiceDao blacklist = new BlacklistServiceDao();
+        String rslt = blacklist.getBlacklistStatus(re.connection, re.imei);
         if (rslt.equalsIgnoreCase("NA")) {
-            String deviceId = Imei;
-            logWriter.writeLogBlacklist("Start with Imei " + Imei);
-
-            String message = verifyGSMA(deviceId, url);
-
+          String logpath = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_API_RESPONSE_LOG");
+            logWriter.writeLogBlacklist(logpath,"Start with Imei " + re.imei);
+            String message = verifyGSMA(re);
             if (message.equalsIgnoreCase("NAN")) {
                 status = "NAN";
             } else {
-                logWriter.writeLogBlacklist("End Result for  " + Imei + " :: " + message);
-                status = lacklistServiceImpl.databaseMapper(message, conn);
+                logWriter.writeLogBlacklist(logpath,"End Result for  " + re.imei + " :: " + message);
+                status = blacklist.databaseMapper(message, re.connection);
             }
         } else {
             status = rslt;
@@ -58,14 +54,16 @@ public class EncriptonBlacklistService {
         return status;
     }
 
-    public static void main(String[] args) {
-        System.out.println(verifyGSMA( args[0], "https://devicecheck.gsma.com/imeirtl/leadclookup"));
+    public static String verifyGSMA(RuleInfo re) {
+        var blacklist = new BlacklistServiceDao();
+        String url = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_URL");
+        String APIKey = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_APIKey");
+        String Password = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_Password");
+        String Salt_String = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_Salt_String");
+        String Organization_Id = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_Organization_Id");
 
-    }
-
-    public static String verifyGSMA(String deviceId, String url) {
-
-        String abc = getSHA(APIKey + Password + deviceId);
+        String Secretkey = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_Secretkey");
+        String abc = getSHA(APIKey + Password + re.imei);
         String auth = encrypt(Salt_String + Organization_Id + "=" + abc, Secretkey);
         logger.debug("the auth key is =" + auth);
 
@@ -86,7 +84,7 @@ public class EncriptonBlacklistService {
             headers.set("Authorisation", auth);
 
             map = new LinkedMultiValueMap<>();
-            map.add("deviceid", deviceId);
+            map.add("deviceid", re.imei);
             request = new HttpEntity<>(map, headers);
 
             httpResponse = restTemplate.postForEntity(uri, request, String.class);

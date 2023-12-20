@@ -5,23 +5,23 @@
  */
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import java.sql.Connection;
 import java.io.BufferedWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author user
  */
-public class TAC_FORMAT implements  RuleEngineInterface{
+public class TAC_FORMAT implements  ExecutionInterface{
 
     static final Logger logger = LogManager.getLogger(TAC_FORMAT.class);
 
     @Override
-     public String executeRule(RuleEngine ruleEngine)  {
+     public String executeRule(RuleInfo ruleEngine)  {
         String res = null;
         logger.debug("TAC_FORMAT executeRule ....." + ruleEngine.imei);
         try {
@@ -38,7 +38,7 @@ public class TAC_FORMAT implements  RuleEngineInterface{
         return res;
     }
 
-    public String executeAction(RuleEngine ruleEngine) {
+    public String executeAction(RuleInfo ruleEngine) {
 
         try {
             switch (ruleEngine.action) {

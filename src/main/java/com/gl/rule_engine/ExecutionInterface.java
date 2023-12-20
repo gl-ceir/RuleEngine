@@ -8,9 +8,9 @@ package com.gl.rule_engine;
  *
  * @author maverick
  */
-public interface RuleEngineInterface {
+public interface ExecutionInterface {
 
-    String executeRule(RuleEngine ruleEngine);
+    String executeRule(RuleInfo ruleEngine);
 
-    String executeAction(RuleEngine ruleEngine);
+    String executeAction(RuleInfo ruleEngine);
 }

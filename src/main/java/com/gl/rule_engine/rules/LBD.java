@@ -5,8 +5,7 @@
  */
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import java.io.BufferedWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -14,17 +13,18 @@ import java.sql.Statement;
 import java.io.BufferedWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author user
  */
-public  class LBD implements  RuleEngineInterface{
+public  class LBD implements  ExecutionInterface{
 
      static final Logger logger = LogManager.getLogger(LBD.class);
 
       @Override
-     public String executeRule(RuleEngine ruleEngine)  {
+     public String executeRule(RuleInfo ruleEngine)  {
           Statement stmt = null;
           ResultSet result3 = null;
           String res = "No";
@@ -64,7 +64,7 @@ public  class LBD implements  RuleEngineInterface{
      }
 
      @Override
-     public String executeAction(RuleEngine ruleEngine)  {
+     public String executeAction(RuleInfo ruleEngine)  {
           try {
                switch (ruleEngine.action) {
                     case "Allow": {

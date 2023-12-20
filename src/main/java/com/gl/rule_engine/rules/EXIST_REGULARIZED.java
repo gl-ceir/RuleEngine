@@ -1,24 +1,24 @@
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.io.BufferedWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author user
  */
-public class EXIST_REGULARIZED implements  RuleEngineInterface{
+public class EXIST_REGULARIZED implements  ExecutionInterface{
 
     static final Logger logger = LogManager.getLogger(EXIST_REGULARIZED.class);
 
     @Override
-     public String executeRule(RuleEngine ruleEngine)  {
+     public String executeRule(RuleInfo ruleEngine)  {
         String str = "";
         logger.debug("EXIST_REGULARIZED executeRule ");
           Statement stmt2 = null;
@@ -26,8 +26,8 @@ public class EXIST_REGULARIZED implements  RuleEngineInterface{
         {
             try {
                   stmt2 = ruleEngine.connection.createStatement();
-                  result1 = stmt2.executeQuery("select action, msisdn from device_usage_db  where imei_esn_meid='" + ruleEngine.imei + "' ");
-                logger.debug("select action, msisdn from device_usage_db  where imei_esn_meid='" + ruleEngine.imei + "' ");
+                  result1 = stmt2.executeQuery("select action, msisdn from active_unique_imei  where imei='" + ruleEngine.imei + "' ");
+                logger.debug("select action, msisdn from active_unique_imei  where imei='" + ruleEngine.imei + "' ");
                 String actn = "";
                 String msdn = "";
                 try {
@@ -64,15 +64,15 @@ public class EXIST_REGULARIZED implements  RuleEngineInterface{
         return str;
     }
 
-    public   String chckDubplicateDb(RuleEngine ruleEngine) {
+    public   String chckDubplicateDb(RuleInfo ruleEngine) {
         logger.debug("Chcking for Dupblicate");
         String res = "";
 
         try {
 
             Statement stmt3 = ruleEngine.connection.createStatement();
-            ResultSet result3 = stmt3.executeQuery("select action from device_duplicate_db  where imei_esn_meid='" + ruleEngine.imei + "'    and msisdn = '" + ruleEngine.msisdn + "' ");
-            logger.debug("select action from device_duplicate_db  where imei_esn_meid='" + ruleEngine.imei + "'    and msisdn = '" + ruleEngine.msisdn + "' ");
+            ResultSet result3 = stmt3.executeQuery("select action from active_imei_with_different_msisdn  where imei='" + ruleEngine.imei + "'    and msisdn = '" + ruleEngine.msisdn + "' ");
+            logger.debug("select action from active_imei_with_different_msisdn  where imei='" + ruleEngine.imei + "'    and msisdn = '" + ruleEngine.msisdn + "' ");
             String actn3 = "";
             try {
                 while (result3.next()) {
@@ -97,7 +97,7 @@ public class EXIST_REGULARIZED implements  RuleEngineInterface{
     }
 
     @Override
-     public String executeAction(RuleEngine ruleEngine)  {
+     public String executeAction(RuleInfo ruleEngine)  {
         try {
             switch (ruleEngine.action) {
                 case "Allow": {

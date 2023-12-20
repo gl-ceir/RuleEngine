@@ -7,8 +7,7 @@
 
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.RuleEngine;
-import com.gl.rule_engine.RuleEngineInterface;
+import com.gl.rule_engine.RuleInfo;
 import java.sql.Connection;
 import java.io.BufferedWriter;
 import java.sql.ResultSet;
@@ -17,17 +16,18 @@ import java.util.HashSet;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
  * @author user
  */
-public class SAME_OPERATOR_UNBLOCK implements  RuleEngineInterface{
+public class SAME_OPERATOR_UNBLOCK implements  ExecutionInterface{
 
-    static final Logger logger = LogManager.getLogger(SYS_REG.class);
+    static final Logger logger = LogManager.getLogger(SAME_OPERATOR_UNBLOCK.class);
 
     @Override
-     public String executeRule(RuleEngine ruleEngine)  {
+     public String executeRule(RuleInfo ruleEngine)  {
         String res = "";
         
           Statement stmt2 = null;
@@ -77,7 +77,7 @@ public class SAME_OPERATOR_UNBLOCK implements  RuleEngineInterface{
     }
 
     @Override
-     public String executeAction(RuleEngine ruleEngine)  {
+     public String executeAction(RuleInfo ruleEngine)  {
         try {
             switch (ruleEngine.action) {
                 case "Allow": {

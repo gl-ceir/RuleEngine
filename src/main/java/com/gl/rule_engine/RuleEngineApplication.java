@@ -3,19 +3,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.gl.rule_engine;
- 
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class RuleEngineApplication {
 
-    public static String startRuleEngine(RuleEngine ruleEngine) {
+    static final Logger logger = LogManager.getLogger(RuleEngineApplication.class);
 
-        return RulesClass.getItems()
+    public static String startRuleEngine(RuleInfo ruleEngine) {
+
+        return RulesList.getItems()
                 .stream()
                 .filter(a -> a.getClass().getName().toString().contains(ruleEngine.ruleName))
-                .map(RuleEngineInterface.class::cast)
+                .map(ExecutionInterface.class::cast)
                 .reduce(new String(), (result, ruleNode) -> {
                     String key = ruleEngine.executeRuleAction;
-                    if (key.contains("1")) {
+                    if (key.contains("executeRule")) {
                         result = ruleNode.executeRule(ruleEngine);
                     } else {
                         result = ruleNode.executeAction(ruleEngine);
@@ -26,28 +30,28 @@ public class RuleEngineApplication {
                 });
     }
 }
-//        stream .reduce( (Integer a, Integer b) -> a * b) 
-//               
+//        stream .reduce( (Integer a, Integer b) -> a * b)
+//
 //                .map(     ruleClass -> )
-//        
+//
 //          String aasas = stream.findFirst()
 //                .map( ruleClass ->   { return   ruleClass.executeRule(ruleEngine);}  )
 //                .or(ruleClass ->   { return   ruleClass.executeRule(ruleEngine);} )
 //                  .
-//                
+//
 //                .orElse(null);
-//        
-//          
+//
+//
 //          if(true)
-//                
-//        
+//
+//
 //
 //              stream.findFirst()
 //                      .reduce ( ruleClass-> ( 3  >= 4)  ?  ruleClass.executeRule(ruleEngine) : ruleClass.executeRule(ruleEngine)  )
 //                      .orElse(null);
-//                
-//                
-//                
+//
+//
+//
 //                .map(ruleClass -> ruleClass.executeRule(ruleEngine))
 //                .or(ruleClass -> ruleClass.executeRule(ruleEngine))
 //                .orElse(null);
@@ -60,9 +64,9 @@ public class RuleEngineApplication {
 //            }
 //              return a;
 //        }
-//           
+//
 //        );
-//        String executioner = ""; 
+//        String executioner = "";
 //
 //        stream
 //                .anyMatch(x -> executioner.equals("1"))
@@ -72,22 +76,22 @@ public class RuleEngineApplication {
 //    } else {
 //        //perform function
 //    }
-//        
+//
 //        Optional<RuleEngineInterface> a =    stream.findFirst()
 //                 .filter(wx -> executioner.equals("1"))
 //                .map(ruleClass -> ruleClass.executeRule(ruleEngine))
 //                .or(ruleClass -> ruleClass.executeRule(ruleEngine)) ;
-//                 
-//                 
-//                 
+//
+//
+//
 //          .filter(executioner.equals("1"))
 //          .findAny()
 //          .orElse(null);
-//        
-//         
+//
+//
 //        stream.anyMatch(executioner.equals("1"))
-//                
-//     
+//
+//
 //        System.out.println("--------##########");
 //
 //        new RulesCLass().getItems()
@@ -121,15 +125,10 @@ public class RuleEngineApplication {
 //
 //        System.out.println("--------" + items.count());
 /////
-
 //    public static void main(String[] args) {
 //        System.out.println("--------" + startRuleEngine(new RuleEngine()));
 //
 //    }
-
-
-
-
 //    Stream<RuleEngineInterface> stream = new RulesCLass().getItems()
 //                .stream()
 //                .filter(a -> a.getClass().getName().toString().contains("IMEI_LENGTH"))
