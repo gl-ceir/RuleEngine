@@ -7,31 +7,19 @@ package com.gl.BlackList.model;
 
 import java.io.Serializable;
 
-
 public class BlacklistTacDeviceHistoryDb implements Serializable {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)/
-    private int id;
+    public int id;
+    public String action, reasoncode, reasoncodedesc, by, country;
+    public String date;
 
-//    @Column
-    private String DateReported;
-    private String Organisation;
-    private String OrganisationType;
-    private String Country;
-    private String Action;
-    private String Reason;
-
-//    @ManyToOne
-//    @JoinColumn(name = "blacklist_tac _db_id")
-    private BlacklistTacDb blacklistTacDb;
-
-    public BlacklistTacDb getBlacklistTacDb() {
-        return blacklistTacDb;
-    }
-
-    public void setBlacklistTacDb(BlacklistTacDb blacklistTacDb) {
-        this.blacklistTacDb = blacklistTacDb;
+    public BlacklistTacDeviceHistoryDb(String action, String reasoncode, String reasoncodedesc, String by, String country, String date) {
+        this.action = action;
+        this.reasoncode = reasoncode;
+        this.reasoncodedesc = reasoncodedesc;
+        this.by = by;
+        this.country = country;
+        this.date = date;
     }
 
     public int getId() {
@@ -42,73 +30,52 @@ public class BlacklistTacDeviceHistoryDb implements Serializable {
         this.id = id;
     }
 
-    public String getDateReported() {
-        return DateReported;
+    public String getAction() {
+        return action;
     }
 
-    public void setDateReported(String DateReported) {
-        this.DateReported = DateReported;
+    public void setAction(String action) {
+        this.action = action;
     }
 
-    public String getOrganisation() {
-        return Organisation;
+    public String getReasoncode() {
+        return reasoncode;
     }
 
-    public void setOrganisation(String Organisation) {
-        this.Organisation = Organisation;
+    public void setReasoncode(String reasoncode) {
+        this.reasoncode = reasoncode;
     }
 
-    public String getOrganisationType() {
-        return OrganisationType;
+    public String getReasoncodedesc() {
+        return reasoncodedesc;
     }
 
-    public void setOrganisationType(String OrganisationType) {
-        this.OrganisationType = OrganisationType;
+    public void setReasoncodedesc(String reasoncodedesc) {
+        this.reasoncodedesc = reasoncodedesc;
+    }
+
+    public String getBy() {
+        return by;
+    }
+
+    public void setBy(String by) {
+        this.by = by;
     }
 
     public String getCountry() {
-        return Country;
+        return country;
     }
 
-    public void setCountry(String Country) {
-        this.Country = Country;
+    public void setCountry(String country) {
+        this.country = country;
     }
 
-    public String getAction() {
-        return Action;
+    public String getDate() {
+        return date;
     }
 
-    public void setAction(String Action) {
-        this.Action = Action;
-    }
-
-    public String getReason() {
-        return Reason;
-    }
-
-    public void setReason(String Reason) {
-        this.Reason = Reason;
-    }
-
-   
-
-    BlacklistTacDeviceHistoryDb() {
-    }
-
-    @Override
-    public String toString() {
-        return "BlacklistTacDeviceHistoryDb{" + "id=" + id + ", DateReported=" + DateReported + ", Organisation=" + Organisation + ", OrganisationType=" + OrganisationType + ", Country=" + Country + ", Action=" + Action + ", Reason=" + Reason + ", blacklistTacDb=" + blacklistTacDb + '}';
-    }
-
-    public BlacklistTacDeviceHistoryDb(int id, String DateReported, String Organisation, String OrganisationType, String Country, String Action, String Reason, BlacklistTacDb blacklistTacDb) {
-        this.id = id;
-        this.DateReported = DateReported;
-        this.Organisation = Organisation;
-        this.OrganisationType = OrganisationType;
-        this.Country = Country;
-        this.Action = Action;
-        this.Reason = Reason;
-        this.blacklistTacDb = blacklistTacDb;
+    public void setDate(String date) {
+        this.date = date;
     }
     
     

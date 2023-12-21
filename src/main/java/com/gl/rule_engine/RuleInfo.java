@@ -40,6 +40,12 @@ public class RuleInfo {
     public RuleInfo() {
     }
 
+    public RuleInfo(String imei, Connection connection) {
+        this.imei = imei;
+        this.connection = connection;
+    }
+
+    
     public RuleInfo(String app, String aud, String rep, String ruleName, String executeRuleAction, String featureName, String imei, String sNofDevice, String fileName, String deviceType, String operator, String deviceIdType, String operatorTag, String msisdn, String action, String imsi, String recordType, String systemType, String source, String rawCdrFileName, String imeiArrivalTime, String txn_id, String fileArray, String period, Connection connection, BufferedWriter bw) {
         this.app = app;
         this.aud = aud;
