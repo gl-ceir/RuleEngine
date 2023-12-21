@@ -6,16 +6,14 @@
 package com.gl.BlackList.model;
 
 import java.io.Serializable;
-import java.sql.Time;
-import java.time.LocalDateTime;
 
 public class BlacklistTacDeviceHistoryDb implements Serializable {
 
-    private int id;
-    private String action, reasoncode, reasoncodedesc, by, country;
-    private LocalDateTime date;
+    public int id;
+    public String action, reasoncode, reasoncodedesc, by, country;
+    public String date;
 
-    public BlacklistTacDeviceHistoryDb(String action, String reasoncode, String reasoncodedesc, String by, String country, LocalDateTime date) {
+    public BlacklistTacDeviceHistoryDb(String action, String reasoncode, String reasoncodedesc, String by, String country, String date) {
         this.action = action;
         this.reasoncode = reasoncode;
         this.reasoncodedesc = reasoncodedesc;
@@ -72,11 +70,11 @@ public class BlacklistTacDeviceHistoryDb implements Serializable {
         this.country = country;
     }
 
-    public LocalDateTime getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
+    public void setDate(String date) {
         this.date = date;
     }
     

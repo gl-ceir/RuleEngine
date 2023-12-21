@@ -7,8 +7,6 @@ import com.gl.utils.LogWriter;
 import com.google.gson.Gson;
 import java.net.URI;
 import java.security.MessageDigest;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.time.Duration;
 import java.util.Base64;
 import javax.crypto.Cipher;
@@ -22,11 +20,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
- 
+
 public class EncriptonBlacklistService {
 
     static final Logger logger = LogManager.getLogger(EncriptonBlacklistService.class);
     static Cipher cipher;
+
+  //  static String smpleString = "{ \"refcode\":\"29022016012414\", \"responsestatus\":\"success\", \"deviceid\":\"352018062027392\", \"partnerid\":\"Acme\", \"blockliststatus\":\"No\", \"generalliststatus\":\"No\", \"imeihistory\":[ { \"action\":\"Block Insert\", \"reasoncode\": \"0011\", \"reasoncodedesc\": \"Stolen or Lost\" , \"date\":\"2014-08-02 12:05:24.0\", \"by\":\"Tele 2 AB\", \"Country\":\"Sweden\" }, { \"action\":\"Block Remove\", \"reasoncode\": \"0014\", \"reasoncodedesc\": \"Lost and Found\" , \"date\":\"2014-08-11 12:06:41.0\", \"by\":\"Tele 2 AB\", \"Country\":\"Sweden\" } ], \"manufacturer\":\"Apple Inc\", \"brandname\":\"Apple\", \"marketingname\":\"Apple iPhone 5S (A1457)\", \"modelname\":\"iPhone 5S (A1457)\", \"band\":\"WCDMA FDD Band I, WCDMA FDD Band VIII, LTE FDD BAND 20, LTE FDD BAND 5, LTE FDD BAND 2, GSM 900, LTE FDD BAND 3, GSM 1800, WCDMA FDD Band II, WCDMA FDD Band V, LTE FDD BAND 1, LTE FDD BAND 8, No multi SIM support, GSM850 (GSM800)\", \"operatingsys\":\"iOS\", \"nfc\":\"No\", \"bluetooth\":\"Yes\", \"WLAN\":\"Yes\", \"devicetype\":\"Smartphone\" }";
 
     public static String startBlacklistApp(RuleInfo re) {
         LogWriter logWriter = new LogWriter();
@@ -34,20 +34,28 @@ public class EncriptonBlacklistService {
         BlacklistServiceDao blacklist = new BlacklistServiceDao();
         String rslt = blacklist.getBlacklistStatus(re.connection, re.imei);
         if (rslt == null) {
-            String logpath = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_LogPath");
-            logWriter.writeLogBlacklist(logpath, "Start with Imei " + re.imei);
-            String message = verifyGSMA(re);
-            logWriter.writeLogBlacklist(logpath, "End Result for  " + re.imei + " :: " + message);
-            BlacklistTacDb blacklistTacDb = (new Gson().fromJson(message, BlacklistTacDb.class));
-            if (blacklistTacDb.getResponsestatus().equalsIgnoreCase("success")) {
-                status = blacklist.databaseMapper(blacklistTacDb, re.connection);
-            } else {
-                logger.warn("Not able to retrieve info for imei  =" + re.imei + ", Response: " + message);
+            try {
+                String logpath = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_LogPath");
+                logWriter.writeLogBlacklist(logpath, "Start with Imei " + re.imei);
+                 String message = verifyGSMA(re);
+//                String message = smpleString;
+                logger.debug("Response message " + message);
+                logWriter.writeLogBlacklist(logpath, "End Result for  " + re.imei + " :: " + message);
+                BlacklistTacDb blacklistTacDb = (new Gson().fromJson(message, BlacklistTacDb.class));
+                logger.debug("Response status  " + blacklistTacDb.getResponsestatus());
+                if (blacklistTacDb.getResponsestatus().equalsIgnoreCase("success")) {
+                    status = blacklist.databaseMapper(blacklistTacDb, re.connection);
+                } else {
+                    logger.warn("Not able to retrieve info for imei  =" + re.imei + ", Response: " + message);
+                    status = "NAN";
+                }
+
+            } catch (Exception e) {
+                logger.error("Exception " + e);
             }
         } else {
             status = rslt;
         }
-        logger.debug("Final status" + status);
         return status;
     }
 
@@ -60,9 +68,17 @@ public class EncriptonBlacklistService {
         String Secretkey = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_Secretkey");
         String partnerid = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_Partnerid");
         String Organization_Id = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_Organization_Id");
+//
+//      
+//        String APIKey = "A459000091616";
+//        String Password = "7v50d1501";
+//        String Salt_String = "DCDW";
+//        String Organization_Id = "505";
+//        String Secretkey = "GSMAESencryption";
+//        String url = "https://devicecheck.gsma.com/imeirtl/leadclookup";
 
-        String abc = getSHA(APIKey + Password + re.imei);
-        String auth = encrypt(Salt_String + Organization_Id + "=" + abc, Secretkey);
+        String sha = getSHA(APIKey + Password + re.imei);
+        String auth = encrypt(Salt_String + Organization_Id + "=" + sha, Secretkey);
         logger.debug("the auth key is =" + auth);
 
         URI uri = null;

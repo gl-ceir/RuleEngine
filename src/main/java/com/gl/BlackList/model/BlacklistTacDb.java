@@ -15,9 +15,9 @@ import java.util.List;
 //@Entity
 public class BlacklistTacDb implements Serializable {
 
-    private int id;
+    public int id;
 
-    private String refcode, deviceid, responsestatus, partnerid, blockliststatus, generalliststatus, manufacturer, brandname, marketingname, modelname, band, operatingsys, nfc, bluetooth, WLAN, devicetype;
+    public String refcode, deviceid, responsestatus, partnerid, blockliststatus, generalliststatus, manufacturer, brandname, marketingname, modelname, band, operatingsys, nfc, bluetooth, WLAN, devicetype ,errorcode , errordesc;
 
     List<BlacklistTacDeviceHistoryDb> imeihistory;
 
@@ -168,9 +168,23 @@ public class BlacklistTacDb implements Serializable {
         this.imeihistory = imeihistory;
     }
 
-   
+    public String getErrorcode() {
+        return errorcode;
+    }
 
-    public BlacklistTacDb(int id, String refcode, String deviceid, String responsestatus, String partnerid, String blockliststatus, String generalliststatus, String manufacturer, String brandname, String marketingname, String modelname, String band, String operatingsys, String nfc, String bluetooth, String WLAN, String devicetype) {
+    public void setErrorcode(String errorcode) {
+        this.errorcode = errorcode;
+    }
+
+    public String getErrordesc() {
+        return errordesc;
+    }
+
+    public void setErrordesc(String errordesc) {
+        this.errordesc = errordesc;
+    }
+
+    public BlacklistTacDb(int id, String refcode, String deviceid, String responsestatus, String partnerid, String blockliststatus, String generalliststatus, String manufacturer, String brandname, String marketingname, String modelname, String band, String operatingsys, String nfc, String bluetooth, String WLAN, String devicetype, String errorcode, String errordesc) {
         this.id = id;
         this.refcode = refcode;
         this.deviceid = deviceid;
@@ -188,15 +202,16 @@ public class BlacklistTacDb implements Serializable {
         this.bluetooth = bluetooth;
         this.WLAN = WLAN;
         this.devicetype = devicetype;
+        this.errorcode = errorcode;
+        this.errordesc = errordesc;
     }
 
     @Override
     public String toString() {
-        return "BlacklistTacDb{" + "id=" + id + ", refcode=" + refcode + ", deviceid=" + deviceid + ", responsestatus=" + responsestatus + ", partnerid=" + partnerid + ", blockliststatus=" + blockliststatus + ", generalliststatus=" + generalliststatus + ", manufacturer=" + manufacturer + ", brandname=" + brandname + ", marketingname=" + marketingname + ", modelname=" + modelname + ", band=" + band + ", operatingsys=" + operatingsys + ", nfc=" + nfc + ", bluetooth=" + bluetooth + ", WLAN=" + WLAN + ", devicetype=" + devicetype + ", imeihistory=" + imeihistory + '}';
+        return "BlacklistTacDb{" + "id=" + id + ", refcode=" + refcode + ", deviceid=" + deviceid + ", responsestatus=" + responsestatus + ", partnerid=" + partnerid + ", blockliststatus=" + blockliststatus + ", generalliststatus=" + generalliststatus + ", manufacturer=" + manufacturer + ", brandname=" + brandname + ", marketingname=" + marketingname + ", modelname=" + modelname + ", band=" + band + ", operatingsys=" + operatingsys + ", nfc=" + nfc + ", bluetooth=" + bluetooth + ", WLAN=" + WLAN + ", devicetype=" + devicetype + ", errorcode=" + errorcode + ", errordesc=" + errordesc + ", imeihistory=" + imeihistory + '}';
     }
 
-    
-    
-    
+   
+
     
 }

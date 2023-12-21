@@ -33,13 +33,14 @@ public class BlacklistServiceDao {
             while (rs0.next()) {
                 response = rs0.getString(1);
             }
+            logger.debug("Value from sys_Param for tag " + tag + " is " + response);
         } catch (Exception e) {
             logger.debug("Error while getting details from sys_Param" + e);
         }
         return response;
     }
-    
-       public String getBlacklistStatus(Connection conn, String Imei) {
+
+    public String getBlacklistStatus(Connection conn, String Imei) {
         String status = null;
         try {
             try (Statement stmt = conn.createStatement()) {
@@ -47,19 +48,18 @@ public class BlacklistServiceDao {
                 logger.debug("Query [" + query + "]");
                 try (ResultSet rs = stmt.executeQuery(query)) {
                     while (rs.next()) {
-                        status = rs.getString("blockliststatus");
+                        status = rs.getString("blocklist_status");
                     }
                 }
             }
             logger.debug("  Status  " + status);
         } catch (Exception e) {
-            logger.error("Error at   getBlack listStatus" + e);
+            logger.error("Error " + e);
         }
         return status;
     }
-    
 
-    public String databaseMapper( BlacklistTacDb blacklistTacDb, Connection conn) {
+    public String databaseMapper(BlacklistTacDb blacklistTacDb, Connection conn) {
         String rslt = null;
         try {
             rslt = blacklistTacDb.getBlockliststatus();
@@ -79,8 +79,8 @@ public class BlacklistServiceDao {
                 + "manufacturer, brand_name, marketing_name, model_name , band , operating_sys , nfc , bluetooth , wlan , device_type, "
                 + "created_on , modified_on)"
                 + "values ('" + blacklistTacDb.getRefcode() + "', '" + blacklistTacDb.getResponsestatus() + "' , '" + blacklistTacDb.getDeviceid() + "' ,'" + blacklistTacDb.getPartnerid() + "' , '" + blacklistTacDb.getBlockliststatus() + "', '" + blacklistTacDb.getGeneralliststatus() + "' , "
-                + "  '" + blacklistTacDb.getManufacturer() + "' ,  " + blacklistTacDb.getBrandname() + "', '" + blacklistTacDb.getMarketingname() + "' , '" + blacklistTacDb.getModelname() + "', "
-                + "  '" + blacklistTacDb.getBand() + "' ,  " + blacklistTacDb.getOperatingsys() + "', '" + blacklistTacDb.getNfc() + "' , '" + blacklistTacDb.getBluetooth() + "', '" + blacklistTacDb.getWLAN() + "' , '" + blacklistTacDb.getDevicetype() + "', "
+                + "  '" + blacklistTacDb.getManufacturer() + "' ,  '" + blacklistTacDb.getBrandname() + "', '" + blacklistTacDb.getMarketingname() + "' , '" + blacklistTacDb.getModelname() + "', "
+                + "  '" + blacklistTacDb.getBand() + "' ,  '" + blacklistTacDb.getOperatingsys() + "', '" + blacklistTacDb.getNfc() + "' , '" + blacklistTacDb.getBluetooth() + "', '" + blacklistTacDb.getWLAN() + "' , '" + blacklistTacDb.getDevicetype() + "', "
                 + "  CURRENT_TIMESTAMP , CURRENT_TIMESTAMP )";
         logger.debug("query .." + query);
 
@@ -110,18 +110,17 @@ public class BlacklistServiceDao {
         try {
             stmt = conn.createStatement();
             for (BlacklistTacDeviceHistoryDb btr : blacklistTacDeviceHistoryDb) {
-                var query = " insert  into blacklist_imei_device_history_db ( action, reasoncode, reasoncodedesc, by, country ,blacklist_tac_db_id , created_on) "
+                var query = " insert  into blacklist_imei_block_history ( action, reasoncode, reasoncodedesc, action_taken_by, country ,blacklist_imei_db_id , created_on) "
                         + "values( '" + btr.getAction() + "', '" + btr.getReasoncode() + "',  '" + btr.getReasoncodedesc() + "',  '" + btr.getBy() + "',  '" + btr.getCountry() + "', '" + id + "'  , CURRENT_TIMESTAMP  )";
                 logger.debug(" Query:: " + query);
                 stmt.executeUpdate(query);
             }
-            logger.debug("Inserted in blck Tac history Db");
             stmt.close();
         } catch (SQLException ex) {
             logger.error(" " + ex);
-        } 
+        }
     }
- 
+
 }
 
 //     public String getBlacklistUrl(Connection conn) {
@@ -155,8 +154,6 @@ public class BlacklistServiceDao {
 //          }
 //          return stats;
 //     }
-
-
 //     void insertInvalidTac(Connection conn, BlacklistTacDb blacklistTacDb) {
 //          boolean isOracle = conn.toString().contains("oracle");
 //          String dateFunction = Util.defaultDate(isOracle);
