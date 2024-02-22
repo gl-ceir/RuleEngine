@@ -28,7 +28,7 @@ class SAME_SERIAL_RECOVERY {
             String opr1 = "null";
 
             stmt = conn.createStatement();
-            String qury = "  select SN_OF_DEVICE    from device_lawful_db  where imei_esn_meid='" + args[3] + "'  ";
+            String qury = "  select SN_OF_DEVICE    from DEVICE_LAWFUL  where imei_esn_meid='" + args[3] + "'  ";
             result = stmt.executeQuery(qury);
             logger.debug(qury);
             try {

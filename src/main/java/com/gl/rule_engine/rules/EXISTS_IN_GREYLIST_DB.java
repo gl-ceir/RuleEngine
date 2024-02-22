@@ -5,12 +5,13 @@
  */
 package com.gl.rule_engine.rules;
 
+import com.gl.rule_engine.ExecutionInterface;
 import com.gl.rule_engine.RuleInfo;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.gl.rule_engine.ExecutionInterface;
+
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 /**
  *
@@ -85,7 +86,7 @@ public class EXISTS_IN_GREYLIST_DB implements ExecutionInterface {
 
                     try {
                         Statement stmt = ruleEngine.connection.createStatement();
-                        String qur = " insert into blocked_device_db  (imei ,IMSI,  msisdn , record_type , system_type , source,raw_cdr_file_name,imei_arrivalTime ,operator, file_name , created_on , modified_on    )  values "
+                        String qur = " insert into rule_action_block_imei  (imei ,IMSI,  msisdn , record_type , system_type , source,raw_cdr_file_name,imei_arrivalTime ,operator, file_name , created_on , modified_on    )  values "
                                 + "('" + ruleEngine.imei + "' , '" + ruleEngine.imsi + "', '" + ruleEngine.msisdn + "' ,'" + ruleEngine.recordType + "' , '" + ruleEngine.systemType + "',  '" + ruleEngine.source + "', '" + ruleEngine.rawCdrFileName + "', '" + ruleEngine.imeiArrivalTime + "', '" + ruleEngine.operator + "',   '" + ruleEngine.fileName + "', current_timestamp,  current_timestamp   ) ";
                         logger.info(".." + qur);
                         stmt.executeUpdate(qur);

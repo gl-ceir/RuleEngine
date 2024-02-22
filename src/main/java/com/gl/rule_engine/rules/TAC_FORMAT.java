@@ -5,12 +5,10 @@
  */
 package com.gl.rule_engine.rules;
 
+import com.gl.rule_engine.ExecutionInterface;
 import com.gl.rule_engine.RuleInfo;
-import java.sql.Connection;
-import java.io.BufferedWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.gl.rule_engine.ExecutionInterface;
 
 /**
  *
@@ -23,7 +21,7 @@ public class TAC_FORMAT implements  ExecutionInterface{
     @Override
      public String executeRule(RuleInfo ruleEngine)  {
         String res = null;
-        logger.debug("TAC_FORMAT executeRule ....." + ruleEngine.imei);
+        logger.info("tac format imei:" + ruleEngine.imei);
         try {
             if ((ruleEngine.imei.length() == 8 && (ruleEngine.imei.matches("^[-\\w.]+")))) {      // args[10].equalsIgnoreCase("GSM") &&
                 res = "Yes";

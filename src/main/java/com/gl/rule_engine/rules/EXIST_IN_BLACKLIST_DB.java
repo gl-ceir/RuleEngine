@@ -5,22 +5,21 @@
  */
 package com.gl.rule_engine.rules;
 
+import com.gl.rule_engine.ExecutionInterface;
 import com.gl.rule_engine.RuleInfo;
-import java.sql.Connection;
-import java.io.BufferedWriter;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.gl.rule_engine.ExecutionInterface;
 
- 
-public class EXIST_IN_BLACKLIST_DB implements  ExecutionInterface {
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+
+public class EXIST_IN_BLACKLIST_DB implements ExecutionInterface {
 
     static final Logger logger = LogManager.getLogger(EXIST_IN_BLACKLIST_DB.class);
 
     @Override
-     public String executeRule(RuleInfo ruleEngine)  {
+    public String executeRule(RuleInfo ruleEngine) {
         String res = "";
         logger.debug("EXIST_IN_BLACKLIST_DB executeRule");
         Statement stmt2 = null;
@@ -60,7 +59,7 @@ public class EXIST_IN_BLACKLIST_DB implements  ExecutionInterface {
     }
 
     @Override
-     public String executeAction(RuleInfo ruleEngine)  {
+    public String executeAction(RuleInfo ruleEngine) {
         try {
             switch (ruleEngine.action) {
                 case "Allow": {
@@ -80,12 +79,12 @@ public class EXIST_IN_BLACKLIST_DB implements  ExecutionInterface {
                 break;
                 case "Block": {
                     logger.debug("Action is Block");
-                    
+
                     try {
                         Statement stmt = ruleEngine.connection.createStatement();
-                        String qur = " insert into blocked_device_db  (imei ,IMSI,  msisdn , record_type , system_type , source,raw_cdr_file_name,imei_arrivalTime ,operator, file_name , created_on , modified_on    )  values "
+                        String qur = " insert into rule_action_block_imei  (imei ,IMSI,  msisdn , record_type , system_type , source,raw_cdr_file_name,imei_arrivalTime ,operator, file_name , created_on , modified_on    )  values "
                                 + "('" + ruleEngine.imei + "' , '" + ruleEngine.imsi + "', '" + ruleEngine.msisdn + "' ,'" + ruleEngine.recordType + "' , '" + ruleEngine.systemType + "',  '" + ruleEngine.source + "', '" + ruleEngine.rawCdrFileName + "', '" + ruleEngine.imeiArrivalTime + "', '" + ruleEngine.operator + "',   '" + ruleEngine.fileName + "', current_timestamp,  current_timestamp   ) ";
-                     logger.info(".." +  qur);
+                        logger.info(".." + qur);
                         stmt.executeUpdate(qur);
                         stmt.close();
                     } catch (Exception e) {

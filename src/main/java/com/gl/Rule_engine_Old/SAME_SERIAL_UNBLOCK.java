@@ -26,7 +26,7 @@ class SAME_SERIAL_UNBLOCK {
         ResultSet result = null;
         try {
             String opr1 = null;
-            String qury = "  select SN_OF_DEVICE    from device_operator_db   where imei_esn_meid = '" + args[3] + "'  ";
+            String qury = "  select SN_OF_DEVICE    from DEVICE_OPERATOR   where imei_esn_meid = '" + args[3] + "'  ";
             logger.debug("qury " + qury);
             stmt = conn.createStatement();
             result = stmt.executeQuery(qury);

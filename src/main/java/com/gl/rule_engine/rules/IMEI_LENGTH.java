@@ -22,9 +22,8 @@ public class IMEI_LENGTH implements ExecutionInterface {
     public String executeRule(RuleInfo ruleEngine) {
         String res = "Yes";
         try {
-
-            if (ruleEngine.deviceIdType.trim().equalsIgnoreCase("IMEI") || ruleEngine.operatorTag.trim().equalsIgnoreCase("GSM")) {
-                logger.debug(".. " + ruleEngine.deviceIdType);
+            logger.debug(".. " + ruleEngine.deviceIdType);
+            if (ruleEngine.deviceIdType.trim().equalsIgnoreCase("IMEI") ) {
                 if ((ruleEngine.imei.length() == 15 || ruleEngine.imei.length() == 16) && (ruleEngine.imei.matches("^[0-9]+$"))) {
                     res = "Yes";
                 } else {

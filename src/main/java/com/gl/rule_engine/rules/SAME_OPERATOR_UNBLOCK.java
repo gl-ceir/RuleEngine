@@ -36,7 +36,7 @@ public class SAME_OPERATOR_UNBLOCK implements  ExecutionInterface{
             String opr1 = null;
             String opr2 = null;
               stmt2 = ruleEngine.connection.createStatement();
-            String qury = " select OPERATOR_TYPE_ID from stolenand_recovery_mgmt where  TXN_ID = (select TXN_ID  from  device_operator_db where IMEI_ESN_MEID = '" + ruleEngine.imei + "' )";
+            String qury = " select OPERATOR_TYPE_ID from STOLEN_AND_RECOVERY_TXN where  TXN_ID = (select TXN_ID  from  DEVICE_OPERATOR where IMEI_ESN_MEID = '" + ruleEngine.imei + "' )";
               result1 = stmt2.executeQuery(qury);
             logger.debug(qury);
             try {
@@ -47,7 +47,7 @@ public class SAME_OPERATOR_UNBLOCK implements  ExecutionInterface{
                 logger.error("opr1 " + e);
             }
 
-            qury = " select OPERATOR_TYPE_ID from stolenand_recovery_mgmt where  TXN_ID =  '" + ruleEngine.txn_id + "' ";
+            qury = " select OPERATOR_TYPE_ID from STOLEN_AND_RECOVERY_TXN where  TXN_ID =  '" + ruleEngine.txn_id + "' ";
             result1 = stmt2.executeQuery(qury);
             logger.debug(qury);
             try {
