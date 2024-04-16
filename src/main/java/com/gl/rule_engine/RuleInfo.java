@@ -37,6 +37,8 @@ public class RuleInfo {
     public String aud;
     public String rep;
 
+    public String edrapp;
+
     public RuleInfo() {
     }
 
@@ -47,6 +49,37 @@ public class RuleInfo {
 
     
     public RuleInfo(String app, String aud, String rep, String ruleName, String executeRuleAction, String featureName, String imei, String sNofDevice, String fileName, String deviceType, String operator, String deviceIdType, String operatorTag, String msisdn, String action, String imsi, String recordType, String systemType, String source, String rawCdrFileName, String imeiArrivalTime, String txn_id, String fileArray, String period, Connection connection, BufferedWriter bw) {
+        this.app = app;
+        this.aud = aud;
+        this.rep = rep;
+        this.ruleName = ruleName;
+        this.executeRuleAction = executeRuleAction;
+        this.featureName = featureName;
+        this.imei = imei;
+        this.sNofDevice = sNofDevice;
+        this.fileName = fileName;
+        this.deviceType = deviceType;
+        this.operator = operator;
+        this.deviceIdType = deviceIdType;
+        this.operatorTag = operatorTag;
+        this.msisdn = msisdn;
+        this.action = action;
+        this.imsi = imsi;
+        this.recordType = recordType;
+        this.systemType = systemType;
+        this.source = source;
+        this.rawCdrFileName = rawCdrFileName;
+        this.imeiArrivalTime = imeiArrivalTime;
+        this.txn_id = txn_id;
+        this.fileArray = fileArray;
+        this.period = period;
+        this.connection = connection;
+        this.bw = bw;
+    }
+
+
+    public RuleInfo(String edrapp,String app, String aud, String rep, String ruleName, String executeRuleAction, String featureName, String imei, String sNofDevice, String fileName, String deviceType, String operator, String deviceIdType, String operatorTag, String msisdn, String action, String imsi, String recordType, String systemType, String source, String rawCdrFileName, String imeiArrivalTime, String txn_id, String fileArray, String period, Connection connection, BufferedWriter bw) {
+        this.edrapp = edrapp;
         this.app = app;
         this.aud = aud;
         this.rep = rep;

@@ -50,7 +50,8 @@ public interface RulesList {
                 new FOREIGN_SIM(),
                 new TEST_IMEI(),
                 new EXIST_IN_VIP_LIST(),
-                new USER_REG()
+                new USER_REG(),
+                new EXISTS_IN_ALL_EDR_ACTIVE_DB()
         );
     }
 }
