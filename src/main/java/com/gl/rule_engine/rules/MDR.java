@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.gl.rule_engine.rules;
 
 import com.gl.rule_engine.ExecutionInterface;
@@ -12,28 +8,27 @@ import org.apache.logging.log4j.Logger;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+public class MDR implements ExecutionInterface {
 
-public class EXISTS_IN_GSMA_DETAILS_DB implements ExecutionInterface {
-
-    static final Logger logger = LogManager.getLogger(EXISTS_IN_GSMA_DETAILS_DB.class);
+    static final Logger logger = LogManager.getLogger(MDR.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String query = "select * from app.mobile_device_repository where device_id='" + ruleEngine.imei.substring(0, 8) + "' ";
+        String query = "select * from  " + ruleEngine.app + ".mobile_device_repository where device_id='" + ruleEngine.imei.substring(0, 8) + "' ";
         logger.debug("Query " + query);
         var response = "NO";
-        try ( ResultSet rs = ruleEngine.statement.executeQuery(query)) {
+        try ( ResultSet rs =ruleEngine.statement.executeQuery(query)) {
             while (rs.next()) {
                 response = "YES";
             }
         } catch (Exception e) {
-            logger.error(e + ", [QUERY]" + query);
+            logger.error(e.toString() + ", [QUERY]" + query);
         }
         return response;
     }
 
-    @Override
 
+    @Override
     public String executeAction(RuleInfo ruleEngine) {
         try {
             switch (ruleEngine.action) {
@@ -46,10 +41,6 @@ public class EXISTS_IN_GSMA_DETAILS_DB implements ExecutionInterface {
                 }
                 break;
                 case "Reject": {
-                    logger.debug("Action is Reject");
-                    String fileString = ruleEngine.fileArray + " , Error Code :CON_RULE_0003 , Error Description :TAC in IMEI is not approved TAC from GSMA Tac Details ";
-                    ruleEngine.bw.write(fileString);
-                    ruleEngine.bw.newLine();
                 }
                 break;
                 case "Block": {
@@ -62,13 +53,6 @@ public class EXISTS_IN_GSMA_DETAILS_DB implements ExecutionInterface {
                 break;
                 case "SYS_REG": {
                     logger.debug("Action is SYS_REG");
-                }
-                break;
-                case "NAN": {
-                    logger.debug("Action is NAN");
-                    String fileString = ruleEngine.fileArray + " , Error Code :CON_RULE_0002, Error Description :Could not ruleEngine.connectionect to GSMA server.Try after Some Time.  ";
-                    ruleEngine.bw.write(fileString);
-                    ruleEngine.bw.newLine();
                 }
                 break;
                 case "USER_REG": {
@@ -85,5 +69,4 @@ public class EXISTS_IN_GSMA_DETAILS_DB implements ExecutionInterface {
             return "Failure";
         }
     }
-
 }

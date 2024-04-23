@@ -1,9 +1,5 @@
 package com.gl.rule_engine.rules;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 import java.sql.ResultSet;
 import java.sql.Statement;
 import org.apache.logging.log4j.LogManager;
@@ -12,27 +8,23 @@ import org.apache.logging.log4j.Logger;
 import com.gl.rule_engine.RuleInfo;
 import com.gl.rule_engine.ExecutionInterface;
 
-/**
- *
- * @author maverick
- */
-public class NATIONAL_WHITELISTS implements ExecutionInterface {
+public class NWL implements ExecutionInterface {
 
-    static final Logger logger = LogManager.getLogger(NATIONAL_WHITELISTS.class);
+    static final Logger logger = LogManager.getLogger(NWL.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String res = "No";
-        String query = "select count(*) from  " + ruleEngine.app + ".national_whitelist where imei like '" + ruleEngine.imei + "%' ";
-        try (Statement stmt = ruleEngine.connection.createStatement(); ResultSet rs = stmt.executeQuery(query);) {
+        String query = "select  * from  " + ruleEngine.app + ".national_whitelist where imei like '" + ruleEngine.imei + "%' ";
+        logger.debug("Query " + query);
+        var response = "NO";
+        try ( ResultSet rs = ruleEngine.statement.executeQuery(query)) {
             while (rs.next()) {
-                res = "Yes";
+                response = "YES";
             }
-            logger.info("value from db " + res);
         } catch (Exception e) {
-            logger.error("Error.." + e);
+            logger.error(e + ", [QUERY]" + query);
         }
-        return res;
+        return response;
     }
 
     @Override

@@ -6,21 +6,17 @@
 package com.gl.rule_engine.rules;
 
 import com.gl.rule_engine.RuleInfo;
-import java.sql.Connection;
+
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.io.BufferedWriter;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.gl.rule_engine.ExecutionInterface;
 
-/**
- *
- * @author user
- */
 public class EXISTS_IN_WHITELIST_DB implements  ExecutionInterface {
 
-    static final Logger logger = LogManager.getLogger(EXIST_IN_CUSTOM_DB.class);
+    static final Logger logger = LogManager.getLogger(CUSTOM_CHK.class);
     @Override
      public String executeRule(RuleInfo ruleEngine)  {
         String res = "";

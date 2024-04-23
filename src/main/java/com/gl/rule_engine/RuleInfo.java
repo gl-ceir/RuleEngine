@@ -2,42 +2,41 @@ package com.gl.rule_engine;
 
 import java.io.BufferedWriter;
 import java.sql.Connection;
+import java.sql.Statement;
 
 public class RuleInfo {
 
+    public String app;
+    public String aud;
+    public String rep;
+    public String edrapp;
+    public String imei;
+    public String msisdn;
+    public String imsi;           //txnId
     public String ruleName;
     public String executeRuleAction;   //1 -rule 2  -action
     public String featureName;
-    public String imei;
-    public String sNofDevice;
-    public String fileName;
-    public String deviceType;
-    //  public String recordTime;
+    public String period;
+    public String action;
     public String operator;
+    public String fileName;
+
+    public String sNofDevice;
+    public String deviceType;
     public String deviceIdType;      //error
     public String operatorTag;
-    public String period;
-    public String msisdn;
-    public String action;
-    public String imsi;           //txnId
     public String recordType;  // fileArray
     public String systemType;
     public String source;
     public String rawCdrFileName;
     public String imeiArrivalTime;
-    //  public String Operator;
-    //   public String FileName;
-    //   public String error;
     public String txn_id;
     public String fileArray;
 
     public Connection connection;
+    public Statement statement;
     public BufferedWriter bw;
-    public String app;
-    public String aud;
-    public String rep;
 
-    public String edrapp;
 
     public RuleInfo() {
     }
@@ -47,7 +46,7 @@ public class RuleInfo {
         this.connection = connection;
     }
 
-    
+
     public RuleInfo(String app, String aud, String rep, String ruleName, String executeRuleAction, String featureName, String imei, String sNofDevice, String fileName, String deviceType, String operator, String deviceIdType, String operatorTag, String msisdn, String action, String imsi, String recordType, String systemType, String source, String rawCdrFileName, String imeiArrivalTime, String txn_id, String fileArray, String period, Connection connection, BufferedWriter bw) {
         this.app = app;
         this.aud = aud;
@@ -78,7 +77,7 @@ public class RuleInfo {
     }
 
 
-    public RuleInfo(String edrapp,String app, String aud, String rep, String ruleName, String executeRuleAction, String featureName, String imei, String sNofDevice, String fileName, String deviceType, String operator, String deviceIdType, String operatorTag, String msisdn, String action, String imsi, String recordType, String systemType, String source, String rawCdrFileName, String imeiArrivalTime, String txn_id, String fileArray, String period, Connection connection, BufferedWriter bw) {
+    public RuleInfo(String edrapp, String app, String aud, String rep, String ruleName, String executeRuleAction, String featureName, String imei, String sNofDevice, String fileName, String deviceType, String operator, String deviceIdType, String operatorTag, String msisdn, String action, String imsi, String recordType, String systemType, String source, String rawCdrFileName, String imeiArrivalTime, String txn_id, String fileArray, String period, Connection connection, BufferedWriter bw) {
         this.edrapp = edrapp;
         this.app = app;
         this.aud = aud;
@@ -107,6 +106,45 @@ public class RuleInfo {
         this.connection = connection;
         this.bw = bw;
     }
+
+    public RuleInfo(String app, String aud, String rep, String edrapp, String imei, String msisdn, String imsi, String ruleName, String executeRuleAction, String featureName, String period, String action, String operator, String fileName, Connection connection) {
+        this.app = app;
+        this.aud = aud;
+        this.rep = rep;
+        this.edrapp = edrapp;
+        this.imei = imei;
+        this.msisdn = msisdn;
+        this.imsi = imsi;
+        this.ruleName = ruleName;
+        this.executeRuleAction = executeRuleAction;
+        this.featureName = featureName;
+        this.period = period;
+        this.action = action;
+        this.operator = operator;
+        this.fileName = fileName;
+        this.connection = connection;
+    }
+
+    public RuleInfo(String app, String aud, String rep, String edrapp, String imei, String msisdn, String imsi, String ruleName, String executeRuleAction, String featureName, String period, String action, String operator, String fileName, Connection connection, Statement statement) {
+        this.app = app;
+        this.aud = aud;
+        this.rep = rep;
+        this.edrapp = edrapp;
+        this.imei = imei;
+        this.msisdn = msisdn;
+        this.imsi = imsi;
+        this.ruleName = ruleName;
+        this.executeRuleAction = executeRuleAction;
+        this.featureName = featureName;
+        this.period = period;
+        this.action = action;
+        this.operator = operator;
+        this.fileName = fileName;
+        this.connection = connection;
+        this.statement = statement;
+
+    }
+
 
 //     {device_info.get("rule_name"),  //0  ruleName
 //"2",   //1   executeRuleExecuteAction 1-rule,2-action

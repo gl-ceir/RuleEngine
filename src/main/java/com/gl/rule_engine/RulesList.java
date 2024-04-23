@@ -5,6 +5,7 @@
 package com.gl.rule_engine;
 
 import com.gl.rule_engine.rules.*;
+
 import java.util.List;
 
 public interface RulesList {
@@ -23,11 +24,11 @@ public interface RulesList {
                 new IMEI_LUHN_CHECK(),
                 new EXIST_IN_BLACKLIST_DB(),
                 new IMEI_NULL(),
-                new EXIST_IN_CUSTOM_DB(),
+                new CUSTOM_CHK(),
                 new EXISTS_IN_FOREIGN_DB(),
                 new LBD(),
                 new EXIST_IN_DISTRIBUTOR_DB(),
-                new NATIONAL_WHITELISTS(),
+                new NWL(),
                 new EXIST_IN_END_USER_DB(),
                 new EXIST_IN_END_USER_DEVICE_DB(),
                 new SAME_DEVICETYPE_RECOVERY(),
@@ -51,7 +52,14 @@ public interface RulesList {
                 new TEST_IMEI(),
                 new EXIST_IN_VIP_LIST(),
                 new USER_REG(),
-                new EXISTS_IN_ALL_EDR_ACTIVE_DB()
+                new EXISTS_IN_ALL_EDR_ACTIVE_DB(),
+
+                new MDR(),
+                new IMEI_PAIRING(),
+                new DUPLICATE_DEVICE(),
+                new NWL(),
+                new STOLEN(),
+                new TRC()
         );
     }
 }
