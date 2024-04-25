@@ -20,7 +20,7 @@ public class CUSTOM_CHK implements  ExecutionInterface {
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String query = "select  * from  " + ruleEngine.app + ".custom_sample where imei like '" + ruleEngine.imei + "%' ";
+        String query = "select  * from  " + ruleEngine.app + ".gdce_data where imei like '" + ruleEngine.imei + "%' ";
         logger.debug("Query " + query);
         var response = "NO";
         try ( ResultSet rs = ruleEngine.statement.executeQuery(query)) {
