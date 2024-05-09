@@ -2,7 +2,7 @@ package com.gl.Rule_engine_Old;
 
 import java.io.BufferedWriter;
 import java.sql.Connection;
-import java.io.BufferedWriter;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -143,7 +143,21 @@ public class RuleEngineApplication {
             if ("SAME_SERIAL_UNBLOCK".equalsIgnoreCase(args[0])) {
                 reslt = SAME_SERIAL_UNBLOCK.executeRule(args, conn);
             }
-
+            if("DUPLICATE_DEVICE".equalsIgnoreCase(args[0])) {
+                reslt = DUPLICATE_DEVICE.executeRule(args, conn);
+            }
+            if("STOLEN".equalsIgnoreCase(args[0])) {
+                reslt = STOLEN.executeRule(args, conn);
+            }
+            if("EXISTS_IN_GSMA_DB_TYPE_APPROVED".equalsIgnoreCase(args[0])) {
+                reslt = EXISTS_IN_GSMA_DB_TYPE_APPROVED.executeRule(args, conn);
+            }
+            if("EXISTS_IN_LOCAL_MANUFACTURER_DB".equalsIgnoreCase(args[0])) {
+                reslt = EXISTS_IN_LOCAL_MANUFACTURER_DB.executeRule(args, conn);
+            }
+            if("IMEI_PAIRING".equalsIgnoreCase(args[0])) {
+                reslt = EXISTS_IN_LOCAL_MANUFACTURER_DB.executeRule(args, conn);
+            }
         }
 
         if ("2".equalsIgnoreCase(args[1])) {
@@ -269,6 +283,21 @@ public class RuleEngineApplication {
             }
             if ("SAME_SERIAL_UNBLOCK".equalsIgnoreCase(args[0])) {
                 reslt = SAME_SERIAL_UNBLOCK.executeAction(args, conn, bw);
+            }
+            if("DUPLICATE_DEVICE".equalsIgnoreCase(args[0])) {
+                reslt = DUPLICATE_DEVICE.executeAction(args, conn, bw);
+            }
+            if("STOLEN".equalsIgnoreCase(args[0])) {
+                reslt = STOLEN.executeAction(args, conn, bw);
+            }
+            if("EXISTS_IN_GSMA_DB_TYPE_APPROVED".equalsIgnoreCase(args[0])) {
+                reslt = EXISTS_IN_GSMA_DB_TYPE_APPROVED.executeAction(args, conn, bw);
+            }
+            if("EXISTS_IN_LOCAL_MANUFACTURER_DB".equalsIgnoreCase(args[0])) {
+                reslt = EXISTS_IN_LOCAL_MANUFACTURER_DB.executeAction(args, conn, bw);
+            }
+            if("IMEI_PAIRING".equalsIgnoreCase(args[0])) {
+                reslt = EXISTS_IN_LOCAL_MANUFACTURER_DB.executeRule(args, conn);
             }
 
         }

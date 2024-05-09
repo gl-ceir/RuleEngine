@@ -1,34 +1,34 @@
 package com.gl.Rule_engine_Old;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-/**
- *
- * @author maverick
- */
-public class NATIONAL_WHITELISTS {
+public class EXISTS_IN_GSMA_DB_TYPE_APPROVED {
 
-    static final Logger logger = LogManager.getLogger(NATIONAL_WHITELISTS.class);
+    static final Logger logger = LogManager.getLogger(EXISTS_IN_GSMA_DB_TYPE_APPROVED.class);
 
     static String executeRule(String[] args, Connection conn) {
+        if (args[3].length() < 8) {
+            logger.info("length less than 8 ->" + args[3].length());
+            return "No";
+        }
+        Statement stmt = null;
+        ResultSet result = null;
         String res = "No";
-        String query = "select count(*) from national_whitelist where imei like '" + args[3] + "%' ";
-        logger.info("[" + query +"]");
-        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query);) {
+        try {
+            logger.info("[Starting]");
+            stmt = conn.createStatement();
+                String query = "select count(device_id) from app.mobile_device_repository  where device_id='" + args[3].substring(0, 8) + "' and is_type_approved=1";
+            logger.info("[" + query +"]");
+            result = stmt.executeQuery(query);
             try {
-                while (rs.next()) {
-                    res = rs.getString(1);
+                while (result.next()) {
+                    res = result.getString(1);
                 }
             } catch (Exception e) {
                 logger.error("");
@@ -38,16 +38,23 @@ public class NATIONAL_WHITELISTS {
             } else {
                 res = "No";
             }
-            logger.info("value from db " + res);
+            result.close();
+            stmt.close();
         } catch (Exception e) {
-            logger.error("Error.." + e);
+            logger.error("error.." + e);
+        } finally {
+            try {
+                result.close();
+                stmt.close();
+            } catch (Exception ex) {
+                logger.error("Error for Finally " + ex);
+            }
         }
         return res;
     }
 
     static String executeAction(String[] args, Connection conn, BufferedWriter bw) {
         try {
-            logger.debug("Action::: " + args[13]);
             switch (args[13]) {
                 case "Allow": {
                     logger.debug("Action is Allow");
@@ -59,23 +66,28 @@ public class NATIONAL_WHITELISTS {
                 break;
                 case "Reject": {
                     logger.debug("Action is Reject");
-                    String fileString = args[15] + " ,Error Code :CON_RULE_0019, Error Description : IMEI/ESN/MEID is already present in the system  ";
+                    String fileString = args[15] + " , Error Code :CON_RULE_0003 , Error Description :TAC in IMEI is not approved TAC from GSMA Tac Details ";
                     bw.write(fileString);
                     bw.newLine();
-
+                }
+                break;
+                case "Block": {
+                    logger.debug("Action is Block");
                 }
                 break;
                 case "Report": {
-                    logger.debug("Action is Report");
-
-                }
-                break;
-                case "Report2": {
                     logger.debug("Action is Report");
                 }
                 break;
                 case "SYS_REG": {
                     logger.debug("Action is SYS_REG");
+                }
+                break;
+                case "NAN": {
+                    logger.debug("Action is NAN");
+                    String fileString = args[15] + " , Error Code :CON_RULE_0002, Error Description :Could not connect to GSMA server.Try after Some Time.  ";
+                    bw.write(fileString);
+                    bw.newLine();
                 }
                 break;
                 case "USER_REG": {
