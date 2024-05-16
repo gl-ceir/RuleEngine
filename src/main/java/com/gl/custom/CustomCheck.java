@@ -11,15 +11,7 @@ public class CustomCheck {
     static final Logger logger = LogManager.getLogger(CustomCheck.class);
 
     public static boolean identifyCustomComplianceStatus(Connection conn, String imei, String source) {
-        if (checkInGdceData(conn, imei)) {
-            return true;
-        } else {
-            if (getValueFromSysParam(conn, source)) {
-                return checkFromApi(conn, imei);
-            } else {
-                return false;
-            }
-        }
+        return false;
     }
 
     private static boolean checkFromApi(Connection conn, String imei) {

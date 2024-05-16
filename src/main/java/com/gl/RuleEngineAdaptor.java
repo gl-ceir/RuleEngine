@@ -111,13 +111,15 @@ public class RuleEngineAdaptor {
 
     private static RuleInfo createRuleInfo(Map<String, String> device_info, RuleAttribute rule, Connection conn, Statement statement) {
         return new RuleInfo(device_info.get("appdbName"), device_info.get("auddbName"), device_info.get("repdbName"), device_info.get("edrappdbName"),
-                device_info.get("imei"), device_info.get("msisdn"), device_info.get("imsi"),
+                device_info.get("imei").length() >14 ? device_info.get("imei").substring(0,14) :device_info.get("imei")
+                , device_info.get("msisdn"), device_info.get("imsi"),
                 rule.rule_name, "executeRule", device_info.get("feature"), rule.period, rule.action, device_info.get("operator"), device_info.get("file_name"), conn, statement);
     }
 
     private static RuleInfo createRuleActionInfo(Map<String, String> device_info, RuleAttribute rule, String output, Connection conn, Statement statement) {
         return new RuleInfo(device_info.get("appdbName"), device_info.get("auddbName"), device_info.get("repdbName"), device_info.get("edrappdbName"),
-                device_info.get("imei"), device_info.get("msisdn"), device_info.get("imsi"),
+                device_info.get("imei").length() >14 ? device_info.get("imei").substring(0,14) :device_info.get("imei")
+                , device_info.get("msisdn"), device_info.get("imsi"),
                 rule.rule_name, "executeAction", device_info.get("feature"), rule.period, output.equalsIgnoreCase("NAN") ? "NAN" : rule.action,
                 device_info.get("operator"), device_info.get("file_name"), conn, statement);
     }
