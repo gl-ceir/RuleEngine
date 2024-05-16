@@ -15,17 +15,24 @@ public class CustomCheck {
             return true;
         } else {
             if (getValueFromSysParam(conn, source)) {
-                return checkFromApi(imei);
+                return checkFromApi(conn, imei);
             } else {
                 return false;
             }
         }
     }
 
-    private static boolean checkFromApi(String imei) {
-        //get DataFromApi();
-        //saveInGdceData();
-        return false; //
+    private static boolean checkFromApi(Connection conn, String imei) {
+        var response = getDataFromApi(imei);
+        saveInGdceData(conn, imei, response);
+        return false;
+    }
+
+    private static void saveInGdceData(Connection conn, String imei, Object response) {
+    }
+
+    private static Object getDataFromApi(String imei) {
+        return null;
     }
 
     private static boolean getValueFromSysParam(Connection conn, String source) {
