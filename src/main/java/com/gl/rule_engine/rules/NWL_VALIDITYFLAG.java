@@ -1,19 +1,20 @@
 package com.gl.rule_engine.rules;
 
-import com.gl.rule_engine.ExecutionInterface;
-import com.gl.rule_engine.RuleInfo;
+import java.sql.ResultSet;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.ResultSet;
+import com.gl.rule_engine.RuleInfo;
+import com.gl.rule_engine.ExecutionInterface;
 
-public class NATIONAL_WHITELISTS implements ExecutionInterface {
+public class NWL_VALIDITYFLAG implements ExecutionInterface {
 
-    static final Logger logger = LogManager.getLogger(NATIONAL_WHITELISTS.class);
+    static final Logger logger = LogManager.getLogger(NWL_VALIDITYFLAG.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String query = "select  * from  " + ruleEngine.app + ".national_whitelist where  imei like '" + ruleEngine.imei + "%'   ";
+        String query = "select  * from  " + ruleEngine.app + ".national_whitelist where validity_flag = 1 and imei like '" + ruleEngine.imei + "%'   ";
         logger.debug("Query " + query);
         var response = "NO";
         try ( ResultSet rs = ruleEngine.statement.executeQuery(query)) {

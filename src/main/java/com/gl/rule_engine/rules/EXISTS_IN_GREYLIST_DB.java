@@ -5,59 +5,32 @@
  */
 package com.gl.rule_engine.rules;
 
+import com.gl.rule_engine.ExecutionInterface;
 import com.gl.rule_engine.RuleInfo;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.gl.rule_engine.ExecutionInterface;
 
-/**
- *
- * @author user
- */
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+
 public class EXISTS_IN_GREYLIST_DB implements ExecutionInterface {
 
     static final Logger logger = LogManager.getLogger(EXISTS_IN_GREYLIST_DB.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String res = "";
-        Statement stmt2 = null;
-        ResultSet result1 = null;
-        try {
-            stmt2 = ruleEngine.connection.createStatement();
-            logger.info("select count(imei ) from  " + ruleEngine.app + ".greylist where imei='" + ruleEngine.imei + "' ");
-            result1 = stmt2.executeQuery("select count(imei) from  " + ruleEngine.app + ".greylist  where imei ='" + ruleEngine.imei + "' ");
-            String res2 = "0";
-            try {
-                while (result1.next()) {
-                    res2 = result1.getString(1);
-                }
-                logger.info("Result " + res2);
-            } catch (Exception e) {
-                logger.error("");
+        String query = "select * from  " + ruleEngine.app + ".grey_list  where imei  like '" + ruleEngine.imei + "%' ";
+        logger.debug("Query " + query);
+        var response = "NO";
+        try ( ResultSet rs =ruleEngine.statement.executeQuery(query)) {
+            while (rs.next()) {
+                response = "YES";
             }
-            if (!res2.equals("0")) {
-                res = "Yes";
-            } else {
-                res = "No";
-            }
-
         } catch (Exception e) {
-            logger.error("error.." + e);
-            e.printStackTrace();
-        } finally {
-            try {
-                result1.close();
-                stmt2.close();
-            } catch (Exception ex) {
-                logger.error("Error" + ex);
-                ex.printStackTrace();
-
-            }
+            logger.error(e + ", [QUERY]" + query);
         }
-        return res;
+        return response;
     }
 
     @Override
@@ -85,7 +58,7 @@ public class EXISTS_IN_GREYLIST_DB implements ExecutionInterface {
 
                     try {
                         Statement stmt = ruleEngine.connection.createStatement();
-                        String qur = " insert into blocked_device_db  (imei ,IMSI,  msisdn , record_type , system_type , source,raw_cdr_file_name,imei_arrivalTime ,operator, file_name , created_on , modified_on    )  values "
+                        String qur = " insert into rule_action_block_imei  (imei ,IMSI,  msisdn , record_type , system_type , source,raw_cdr_file_name,imei_arrivalTime ,operator, file_name , created_on , modified_on    )  values "
                                 + "('" + ruleEngine.imei + "' , '" + ruleEngine.imsi + "', '" + ruleEngine.msisdn + "' ,'" + ruleEngine.recordType + "' , '" + ruleEngine.systemType + "',  '" + ruleEngine.source + "', '" + ruleEngine.rawCdrFileName + "', '" + ruleEngine.imeiArrivalTime + "', '" + ruleEngine.operator + "',   '" + ruleEngine.fileName + "', current_timestamp,  current_timestamp   ) ";
                         logger.info(".." + qur);
                         stmt.executeUpdate(qur);

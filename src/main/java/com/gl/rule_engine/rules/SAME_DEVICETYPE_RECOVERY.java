@@ -33,7 +33,7 @@ public class SAME_DEVICETYPE_RECOVERY implements  ExecutionInterface{
             String opr1 =  null;
          
             stmt = ruleEngine.connection.createStatement();
-            String qury = "  select DEVICE_TYPE    from device_lawful_db  where imei_esn_meid='" + ruleEngine.imei + "'  ";
+            String qury = "  select DEVICE_TYPE    from DEVICE_LAWFUL  where imei_esn_meid='" + ruleEngine.imei + "'  ";
             result = stmt.executeQuery(qury);
             logger.debug(qury);
             try {

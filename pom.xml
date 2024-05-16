@@ -11,13 +11,13 @@
     </parent>
 
     <groupId>com.gl</groupId>
-    <artifactId>Rule_engine</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>RuleEngine</artifactId>
+    <version>1.1</version>
     <name>Rule_engine</name>
 
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
@@ -98,7 +98,8 @@
     
     <build>
         <plugins>
-<!--            <plugin>
+
+        <!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.1.0</version>

@@ -31,7 +31,7 @@ public class SAME_SERIAL_RECOVERY implements  ExecutionInterface{
             String opr1 = "null";
 
             stmt = ruleEngine.connection.createStatement();
-            String qury = "  select SN_OF_DEVICE    from device_lawful_db  where imei_esn_meid='" + ruleEngine.imei + "'  ";
+            String qury = "  select SN_OF_DEVICE    from DEVICE_LAWFUL  where imei_esn_meid='" + ruleEngine.imei + "'  ";
             result = stmt.executeQuery(qury);
             logger.debug(qury);
             try {
