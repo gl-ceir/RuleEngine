@@ -6,31 +6,30 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
-import java.sql.Statement;
 
-public class DUPLICATE_DEVICE implements ExecutionInterface {
+public class LOCAL_MANUFACTURER implements ExecutionInterface {
 
-    static final Logger logger = LogManager.getLogger(DUPLICATE_DEVICE.class);
+    static final Logger logger = LogManager.getLogger(LOCAL_MANUFACTURER.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String query = "select *  from " + ruleEngine.app + ".duplicate_device_detail where imei like '" + ruleEngine.imei + "%' ";
+        String query = "select  * from  " + ruleEngine.app + ".trc_local_manufactured_device_data where  imei like '" + ruleEngine.imei + "%'   ";
         logger.debug("Query " + query);
         var response = "NO";
-        try (ResultSet rs = ruleEngine.statement.executeQuery(query)) {
+        try ( ResultSet rs = ruleEngine.statement.executeQuery(query)) {
             while (rs.next()) {
                 response = "YES";
             }
         } catch (Exception e) {
-            logger.error(e+ ", [QUERY]" + query);
+            logger.error(e + ", [QUERY]" + query);
         }
         return response;
     }
 
-
     @Override
     public String executeAction(RuleInfo ruleEngine) {
         try {
+            logger.debug("Action::: " + ruleEngine.action);
             switch (ruleEngine.action) {
                 case "Allow": {
                     logger.debug("Action is Allow");
@@ -41,13 +40,19 @@ public class DUPLICATE_DEVICE implements ExecutionInterface {
                 }
                 break;
                 case "Reject": {
-                }
-                break;
-                case "Block": {
-                    logger.debug("Action is Block");
+                    logger.debug("Action is Reject");
+                    String fileString = ruleEngine.fileArray + " ,Error Code :CON_RULE_0019, Error Description : IMEI/ESN/MEID is already present in the system  ";
+                    ruleEngine.bw.write(fileString);
+                    ruleEngine.bw.newLine();
+
                 }
                 break;
                 case "Report": {
+                    logger.debug("Action is Report");
+
+                }
+                break;
+                case "Report2": {
                     logger.debug("Action is Report");
                 }
                 break;
@@ -69,4 +74,5 @@ public class DUPLICATE_DEVICE implements ExecutionInterface {
             return "Failure";
         }
     }
+
 }

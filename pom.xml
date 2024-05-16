@@ -11,8 +11,8 @@
     </parent>
 
     <groupId>com.gl</groupId>
-    <artifactId>Rule_engine</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>RuleEngine</artifactId>
+    <version>1.1</version>
     <name>Rule_engine</name>
 
 
@@ -93,7 +93,8 @@
     
     <build>
         <plugins>
-<!--            <plugin>
+
+        <!--            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.1.0</version>

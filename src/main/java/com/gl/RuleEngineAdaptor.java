@@ -55,7 +55,7 @@ public class RuleEngineAdaptor {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("RuleEngine adaptor :" + e);
         }
         rule_detail.put("errorFlag", String.valueOf(errorFlag));
         return outputmap;
@@ -67,7 +67,7 @@ public class RuleEngineAdaptor {
         String period = getPeriodFromSysParam(conn, device_info.get("appdbName")); // write code to get Period
         String query = "select a.id as rule_id,  b.rule_message,   a.name as rule_name,b.output as output,b.grace_action, b.post_grace_action, b.failed_rule_action_grace, b.failed_rule_action_post_grace "
                 + " from " + device_info.get("appdbName") + ".rule a, " + device_info.get("appdbName") + ".feature_rule b" +
-                " where  a.name=b.name  and a.state='Enabled' and b.feature='" + device_info.get("feature") + "' " +
+                " where  a.name=b.name  and  a.state='Enabled' and   b.user_type = '" + device_info.get("userType") + "' and  b.feature='" + device_info.get("feature") + "' " +
                 " and (  b." + period + "_action !='NA'   and   b." + period + "_action !='Disabled' )   " +
                 "order by b.rule_order asc";
         logger.info("RuleEngine Query :" + query);
@@ -111,13 +111,13 @@ public class RuleEngineAdaptor {
 
     private static RuleInfo createRuleInfo(Map<String, String> device_info, RuleAttribute rule, Connection conn, Statement statement) {
         return new RuleInfo(device_info.get("appdbName"), device_info.get("auddbName"), device_info.get("repdbName"), device_info.get("edrappdbName"),
-                device_info.get("imei").length() > 14 ? device_info.get("imei").substring(0, 14) : device_info.get("imei"), device_info.get("msisdn"), device_info.get("imsi"),
+                device_info.get("imei"), device_info.get("msisdn"), device_info.get("imsi"),
                 rule.rule_name, "executeRule", device_info.get("feature"), rule.period, rule.action, device_info.get("operator"), device_info.get("file_name"), conn, statement);
     }
 
     private static RuleInfo createRuleActionInfo(Map<String, String> device_info, RuleAttribute rule, String output, Connection conn, Statement statement) {
         return new RuleInfo(device_info.get("appdbName"), device_info.get("auddbName"), device_info.get("repdbName"), device_info.get("edrappdbName"),
-                device_info.get("imei").length() > 14 ? device_info.get("imei").substring(0, 14) : device_info.get("imei"), device_info.get("msisdn"), device_info.get("imsi"),
+                device_info.get("imei"), device_info.get("msisdn"), device_info.get("imsi"),
                 rule.rule_name, "executeAction", device_info.get("feature"), rule.period, output.equalsIgnoreCase("NAN") ? "NAN" : rule.action,
                 device_info.get("operator"), device_info.get("file_name"), conn, statement);
     }

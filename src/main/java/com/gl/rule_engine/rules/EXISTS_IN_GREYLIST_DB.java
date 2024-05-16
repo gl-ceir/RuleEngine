@@ -20,7 +20,7 @@ public class EXISTS_IN_GREYLIST_DB implements ExecutionInterface {
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String query = "select * from  " + ruleEngine.app + ".grey_list  where imei ='" + ruleEngine.imei + "' ";
+        String query = "select * from  " + ruleEngine.app + ".grey_list  where imei  like '" + ruleEngine.imei + "%' ";
         logger.debug("Query " + query);
         var response = "NO";
         try ( ResultSet rs =ruleEngine.statement.executeQuery(query)) {

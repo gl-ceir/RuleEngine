@@ -5,18 +5,17 @@
  */
 package com.gl.rule_engine.rules;
 
+import com.gl.rule_engine.ExecutionInterface;
 import com.gl.rule_engine.RuleInfo;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import com.gl.rule_engine.ExecutionInterface;
-
 public class EXISTS_IN_WHITELIST_DB implements  ExecutionInterface {
 
-    static final Logger logger = LogManager.getLogger(CUSTOM_CHK.class);
+    static final Logger logger = LogManager.getLogger(EXISTS_IN_WHITELIST_DB.class);
     @Override
      public String executeRule(RuleInfo ruleEngine)  {
         String res = "";
@@ -26,10 +25,8 @@ public class EXISTS_IN_WHITELIST_DB implements  ExecutionInterface {
               stmt2 = ruleEngine.connection.createStatement();
             
             {
-                  result1 = stmt2.executeQuery("select count(imei) from white_list  where IMEI='" + ruleEngine.imei + "' ");
+                result1 = stmt2.executeQuery("select count(imei) from app.white_list  where IMEI='" + ruleEngine.imei + "' ");
             logger.debug("select count(imei) from white_list  where IMEI='" + ruleEngine.imei + "' ");
-                  
-                  
                   String res2 = "0";
                 try {
                     while (result1.next()) {

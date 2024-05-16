@@ -12,8 +12,8 @@ public class TRC implements ExecutionInterface {
     static final Logger logger = LogManager.getLogger(TRC.class);
 
     @Override
-    public String executeRule(RuleInfo ruleEngine) {
-        String query = "select *  from " + ruleEngine.app + ".trc_local_manufactured_devices_dump where imei like '" + ruleEngine.imei + "%' ";
+    public String executeRule(RuleInfo ruleEngine) {  //Chec .trc_local_manufactured_device_data
+        String query = "select *  from " + ruleEngine.app + ".trc_local_manufactured_device_data where imei like '" + ruleEngine.imei + "%' ";
         logger.debug("Query " + query);
         var response = "NO";
         try (ResultSet rs = ruleEngine.statement.executeQuery(query)) {

@@ -10,105 +10,18 @@ import com.gl.rule_engine.RuleInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-/**
- *
- * @author user
- */
 public class IMEI_LENGTH implements ExecutionInterface {
 
     static final Logger logger = LogManager.getLogger(IMEI_LENGTH.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String res = "Yes";
-        try {
-            logger.debug(".. " + ruleEngine.deviceIdType);
-            if (ruleEngine.deviceIdType.trim().equalsIgnoreCase("IMEI") ) {
-                if ((ruleEngine.imei.length() == 15 || ruleEngine.imei.length() == 16) && (ruleEngine.imei.matches("^[0-9]+$"))) {
-                    res = "Yes";
-                } else {
-                    res = "No";
-                }
-            } else {
-                logger.debug("... ");
-                if (ruleEngine.deviceIdType.trim().equalsIgnoreCase("MEID")) {
-                    logger.debug(".... ");
-                    if ((ruleEngine.imei.length() == 15 || ruleEngine.imei.length() == 16) && (ruleEngine.imei.matches("^[0-9A-F]+$"))) {
-                        res = "Yes";
-                    } else {
-                        res = "No";
-                    }
-                } else if (ruleEngine.deviceIdType.trim().equalsIgnoreCase("ESN")) {
-
-                    switch (ruleEngine.imei.length()) {
-                        case 8:
-                            if (ruleEngine.imei.matches("^[0-9A-F]+$")) {
-                                res = "Yes";
-                            } else {
-                                res = "No";
-                            }
-                            break;
-                        case 11:
-                            if (ruleEngine.imei.matches("^[0-9]+$")) {
-                                res = "Yes";
-                            } else {
-                                res = "No";
-                            }
-                            break;
-                        default:
-                            res = "No";
-                            break;
-                    }
-                } else {   ///cdma
-
-                    logger.debug("...... ");
-                    switch (ruleEngine.imei.length()) {
-                        case 8:
-                            if (ruleEngine.imei.matches("^[0-9A-F]+$")) {
-                                res = "Yes";
-                            } else {
-                                res = "No";
-                            }
-                            break;
-
-                        case 15:
-                            if (ruleEngine.imei.matches("^[0-9A-F]+$")) {
-                                res = "Yes";
-                            } else {
-                                res = "No";
-                            }
-                            break;
-
-                        case 16:
-                            if (ruleEngine.imei.matches("^[0-9A-F]+$")) {
-                                res = "Yes";
-                            } else {
-                                res = "No";
-                            }
-                            break;
-
-                        case 11:
-                            if (ruleEngine.imei.matches("^[0-9]+$")) {
-                                res = "Yes";
-                            } else {
-                                res = "No";
-                            }
-                            break;
-                        default:
-                            res = "No";
-                            break;
-                    }
-
-                }
-
-            }
-
-            // cdma  meid/esn  ..      gsm imei
-        } catch (Exception e) {
-            logger.error("Error.." + e);
-        } finally {
-            logger.debug("Imei Length Finished");
+        String res = "No";
+        if (ruleEngine.imei.length() == 15 && ruleEngine.imei.matches("^[0-9]+$")) {
+            res = "Yes";
         }
+        logger.info("IMEI_LENGTH "+ ruleEngine.imei + "::" +ruleEngine.imei.length() + "::RESPONSE::"+res );
+
         return res;
     }
 

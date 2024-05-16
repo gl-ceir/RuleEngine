@@ -24,11 +24,9 @@ public interface RulesList {
                 new IMEI_LUHN_CHECK(),
                 new EXIST_IN_BLACKLIST_DB(),
                 new IMEI_NULL(),
-                new CUSTOM_CHK(),
                 new EXISTS_IN_FOREIGN_DB(),
                 new LBD(),
                 new EXIST_IN_DISTRIBUTOR_DB(),
-                new NWL(),
                 new EXIST_IN_END_USER_DB(),
                 new EXIST_IN_END_USER_DEVICE_DB(),
                 new SAME_DEVICETYPE_RECOVERY(),
@@ -57,9 +55,14 @@ public interface RulesList {
                 new MDR(),
                 new IMEI_PAIRING(),
                 new DUPLICATE_DEVICE(),
-                new NWL(),
+                new NWL_VALIDITYFLAG(),
                 new STOLEN(),
-                new TRC()
+                new TRC(),
+                new CUSTOM_LOCAL_MANUFACTURER(),
+                new NATIONAL_WHITELISTS(),
+
+                new CUSTOM_GDCE(),
+                new  LOCAL_MANUFACTURER()
         );
     }
 }

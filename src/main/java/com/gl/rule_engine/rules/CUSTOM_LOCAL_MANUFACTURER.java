@@ -1,20 +1,26 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.gl.rule_engine.rules;
 
-import java.sql.ResultSet;
-import java.sql.Statement;
+import com.gl.rule_engine.ExecutionInterface;
+import com.gl.rule_engine.RuleInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.gl.rule_engine.RuleInfo;
-import com.gl.rule_engine.ExecutionInterface;
+import java.sql.ResultSet;
 
-public class NWL implements ExecutionInterface {
+public class CUSTOM_LOCAL_MANUFACTURER implements ExecutionInterface {
 
-    static final Logger logger = LogManager.getLogger(NWL.class);
+    static final Logger logger = LogManager.getLogger(CUSTOM_LOCAL_MANUFACTURER.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String query = "select  * from  " + ruleEngine.app + ".national_whitelist where imei like '" + ruleEngine.imei + "%' ";
+        // String query = "select  * from  " + ruleEngine.app + ".gdce_data where imei like '" + ruleEngine.imei + "%' ";
+        String query = "select imei from app.trc_local_manufactured_device_data where imei like  '" + ruleEngine.imei + "%'  " +
+                " union select imei from  app.gdce_data where imei like '" + ruleEngine.imei + "%'  ";
         logger.debug("Query " + query);
         var response = "NO";
         try ( ResultSet rs = ruleEngine.statement.executeQuery(query)) {
@@ -27,10 +33,10 @@ public class NWL implements ExecutionInterface {
         return response;
     }
 
+
     @Override
     public String executeAction(RuleInfo ruleEngine) {
         try {
-            logger.debug("Action::: " + ruleEngine.action);
             switch (ruleEngine.action) {
                 case "Allow": {
                     logger.debug("Action is Allow");
@@ -42,19 +48,19 @@ public class NWL implements ExecutionInterface {
                 break;
                 case "Reject": {
                     logger.debug("Action is Reject");
-                    String fileString = ruleEngine.fileArray + " ,Error Code :CON_RULE_0019, Error Description : IMEI/ESN/MEID is already present in the system  ";
-                    ruleEngine.bw.write(fileString);
-                    ruleEngine.bw.newLine();
 
+                    String fileString = ruleEngine.fileArray + " , Error Code :CON_RULE_0009, Error Description : IMEI/ESN/MEID is already present in the system  ";
+                     ruleEngine.bw.write(fileString);
+                ruleEngine.bw.newLine();
+                }
+                break;
+                case "Block": {
+                    logger.debug("Action is Block");
                 }
                 break;
                 case "Report": {
                     logger.debug("Action is Report");
 
-                }
-                break;
-                case "Report2": {
-                    logger.debug("Action is Report");
                 }
                 break;
                 case "SYS_REG": {
@@ -75,5 +81,4 @@ public class NWL implements ExecutionInterface {
             return "Failure";
         }
     }
-
 }
