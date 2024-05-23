@@ -62,7 +62,8 @@ public interface RulesList {
                 new NATIONAL_WHITELISTS(),
 
                 new CUSTOM_GDCE(),
-                new  LOCAL_MANUFACTURER()
+                new LOCAL_MANUFACTURER(),
+                new GSMA_TYPE_APPROVED()
         );
     }
 }

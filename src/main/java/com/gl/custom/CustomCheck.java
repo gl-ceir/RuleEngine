@@ -1,65 +1,46 @@
 package com.gl.custom;
 
+import com.gl.custom.model.CustomApiResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+
+import static com.gl.custom.dao.CustomQuery.*;
+import static com.gl.custom.service.HttpApiConnection.getDataFromApi;
 
 public class CustomCheck {
     static final Logger logger = LogManager.getLogger(CustomCheck.class);
-
+    // create internally conn ->  or crete con on call
     public static boolean identifyCustomComplianceStatus(Connection conn, String imei, String source) {
-        return false;
+        if (checkInGdceData(conn, imei)) {
+            return true;
+        } else {
+            if (getSourceValueFromSysParam(conn, source)) {
+                return checkFromApi(conn, imei);
+            } else {
+                return false;
+            }
+        }
     }
 
     private static boolean checkFromApi(Connection conn, String imei) {
-        var response = getDataFromApi(imei);
-        saveInGdceData(conn, imei, response);
-        return false;
-    }
-
-    private static void saveInGdceData(Connection conn, String imei, Object response) {
-    }
-
-    private static Object getDataFromApi(String imei) {
-        return null;
-    }
-
-    private static boolean getValueFromSysParam(Connection conn, String source) {
-        String query = "select  value  from app.sys_param where tag  = '" + source + "OnlineAPICheck' ";
-        logger.debug("Query " + query);
-        String response = "false";
-        try (Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(query)) {
-            while (rs.next()) {
-                response = rs.getString("value");
+        try {
+            CustomApiResponse r = getDataFromApi(conn,imei);
+            if (r.getResult().getCustoms_duty_tax().equalsIgnoreCase("paid")) {  // respose has imei GDCE tax paid
+                saveInGdceData(conn, imei, r.getResult());
+                saveInGdceApiCallHistory(conn, imei, r.getResult(), "true", "Success");
+                return true;
+            } else {
+                saveInGdceApiCallHistory(conn, imei, r.getResult(), "false", "Success");
+                return false;
             }
         } catch (Exception e) {
-            logger.error(e + ", [QUERY]" + query);
-        }
-        if (response.equalsIgnoreCase("true")) {
-            return true;
-        } else {
+            saveInGdceApiCallHistory(conn, imei, "", "", "Success");
             return false;
         }
+
     }
 
-
-    static boolean checkInGdceData(Connection conn, String imei) {
-        String query = "select  * from app.gdce_data where imei like '" + imei + "%' ";
-        logger.debug("Query " + query);
-        var response = false;
-        try (Statement st = conn.createStatement();
-             ResultSet rs = st.executeQuery(query)) {
-            while (rs.next()) {
-                response = true;
-            }
-        } catch (Exception e) {
-            logger.error(e + ", [QUERY]" + query);
-        }
-        return response;
-    }
 
 }

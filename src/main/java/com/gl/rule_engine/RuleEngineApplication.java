@@ -15,7 +15,8 @@ public class RuleEngineApplication {
 
         return RulesList.getItems()
                 .stream()
-                .filter(a -> a.getClass().getName().toString().contains(ruleEngine.ruleName))
+              //  .filter(a -> a.getClass().getName().toString().contains(ruleEngine.ruleName))  //.getSimpleName()
+                .filter(a -> a.getClass().getName().toString().endsWith("."+ruleEngine.ruleName))
                 .map(ExecutionInterface.class::cast)
                 .reduce(new String(), (result, ruleNode) -> {
                     String key = ruleEngine.executeRuleAction;

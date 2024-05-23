@@ -46,6 +46,30 @@ public class RuleInfo {
         this.connection = connection;
     }
 
+    public RuleInfo(String ruleName, String app, String executeRuleAction, String imei, Connection connection,
+                    String source, Statement stmt) {
+        this.imei = imei;
+        this.ruleName = ruleName;
+        this.executeRuleAction = executeRuleAction;
+        this.app = app;
+        this.connection = connection;
+        this.source = source;
+        this.statement = stmt;
+    }
+
+    public RuleInfo(String ruleName, String app, String executeRuleAction, String imei, Connection connection,
+                    String source, String action, Statement stmt) {
+        this.imei = imei;
+        this.ruleName = ruleName;
+        this.executeRuleAction = executeRuleAction;
+        this.app = app;
+        this.connection = connection;
+        this.source = source;
+        this.action = action;
+        this.statement = stmt;
+    }
+
+
 
     public RuleInfo(String app, String aud, String rep, String ruleName, String executeRuleAction, String featureName, String imei, String sNofDevice, String fileName, String deviceType, String operator, String deviceIdType, String operatorTag, String msisdn, String action, String imsi, String recordType, String systemType, String source, String rawCdrFileName, String imeiArrivalTime, String txn_id, String fileArray, String period, Connection connection, BufferedWriter bw) {
         this.app = app;

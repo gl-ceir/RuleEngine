@@ -22,12 +22,14 @@
         <maven.compiler.target>11</maven.compiler.target>
     </properties>
     <dependencies>
-        
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
         </dependency>
-
 
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
@@ -40,6 +42,12 @@
             <artifactId>log4j-core</artifactId>
             <version>2.20.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240303</version>
+        </dependency>
+
 
         <!--        <dependency>
             <groupId>mysql</groupId>
@@ -85,7 +93,13 @@
             <version>2.2.4.RELEASE</version>
             <type>jar</type>
         </dependency>
-        
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
     
     
