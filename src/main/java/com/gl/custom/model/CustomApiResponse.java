@@ -32,6 +32,10 @@ public class CustomApiResponse {
 
     public CustomApiResponse() {
     }
+    public CustomApiResponse(String status, String message) {
+        this.status = status;
+        this.message = message;
+    }
 
     public CustomApiResponse(String status, String message, Result result) {
         this.status = status;

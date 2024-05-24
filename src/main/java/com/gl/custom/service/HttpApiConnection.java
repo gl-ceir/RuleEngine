@@ -5,8 +5,6 @@ import com.gl.custom.model.CustomApiResponse;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
@@ -28,59 +26,63 @@ import static com.gl.custom.dao.CustomQuery.getValueFromSysParam;
 public class HttpApiConnection {
     private static final Logger logger = LogManager.getLogger(HttpApiConnection.class);
 
-    public static void main(String[] args) {
-
-        var BASE_URL = "http://staging.gateway.customs.gov.kh:82/ecustoms/dmc-interface";
-        var VERSION = "v1";
-        var CLIENT_ID = "2";
-        var SECRET_KEY = "QNzhRKixNfStVkomv5S1XsQdgb3ufgAiktF2wPMz";
-        var url = "http://staging.gateway.customs.gov.kh:82/ecustoms/dmc-interface/api/v1/oauth/token";
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("client_id", CLIENT_ID);
-        map.add("secret_key", SECRET_KEY);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        httpConnectionForApp(url, headers, map);
-    }
-
     public static CustomApiResponse getDataFromApi(Connection conn, String imei) {
-        String token = authenticationApi(conn);
-        return taxCheckApi(conn, token, imei);
+        String token = getTokenDetails(conn);
+        if (token != null) {
+            return getCustomApiResponse(conn, imei, token);
+        } else {
+            var a = authenticationApi(conn);
+            if (a != null && a.getStatusCodeValue() == 200) {
+                AuthApiResponse b = new Gson().fromJson(a.getBody(), AuthApiResponse.class);
+                return getCustomApiResponse(conn, imei, b.getAccess_token());
+            } else {
+                return new CustomApiResponse("Error", "Client authentication failed");
+            }
+        }
+
     }
 
-    private static CustomApiResponse taxCheckApi(Connection conn, String token, String imei) {
-        var url = "http://staging.gateway.customs.gov.kh:82/ecustoms/dmc-interface/api/v1/imei-tax-check";
-        //   String header =  'Authorization: Bearer 12345
+    private static String getTokenDetails(Connection conn) {
+      //  String value = getValueFromSysParam(conn, "String tag");
+        return null;
+    }
+
+
+    private static CustomApiResponse getCustomApiResponse(Connection conn, String imei, String token) {
+        var c = taxCheckApi(conn, token, imei);
+        if (c != null && c.getStatusCodeValue() == 200) {
+            CustomApiResponse body = new Gson().fromJson(c.getBody(), CustomApiResponse.class);
+            return body;
+        } else {
+            return new CustomApiResponse("Error", "Imei Check Api Response Fail");
+        }
+    }
+//
+
+    private static ResponseEntity<String> taxCheckApi(Connection conn, String token, String imei) {
+        var url = getValueFromSysParam(conn, "CustomCheckImeiApiUrlPath");
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.setBearerAuth(token);
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("imei", imei);
-        String res = httpConnectionForApp(url, headers, map);
-        CustomApiResponse body = new Gson().fromJson(res, CustomApiResponse.class);
-        return body;
+        return httpConnectionForApp(url, headers, map);
     }
 
-    private static String authenticationApi(Connection conn) {
-        var url = getValueFromSysParam(conn, "CustomAuthApiUriPath");
+    private static ResponseEntity<String> authenticationApi(Connection conn) {
+        var url = getValueFromSysParam(conn, "CustomAuthApiUrlPath");
         var clientId = getValueFromSysParam(conn, "CustomAuthApiClientId");
         var secretKey = getValueFromSysParam(conn, "CustomAuthApiSecretKey");
-
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("client_id", clientId);
         map.add("secret_key", secretKey);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         try {
-            var response = httpConnectionForApp(url, headers, map);
-            JSONObject json = (JSONObject) new JSONParser().parse(response);
-            logger.info("json string {}", json);
-            AuthApiResponse body = new Gson().fromJson(response, AuthApiResponse.class);
-            //      CustomApiResponse body = new Gson().fromJson(response, CustomApiResponse.class);
-            return body.getAccess_token();
+            ResponseEntity<String> response = httpConnectionForApp(url, headers, map);
+            logger.info(" Auth Response Code {} with  {}", response.getStatusCodeValue(), response.getBody());
+            return response;
         } catch (Exception e) {
             logger.error("Not able get token " + e + " :: " + e.getCause());
             return null;
@@ -88,29 +90,25 @@ public class HttpApiConnection {
     }
 
 
-    static String httpConnectionForApp(String url, HttpHeaders headers, MultiValueMap<String, String> map) {
+    static ResponseEntity<String> httpConnectionForApp(String url, HttpHeaders headers, MultiValueMap<String, String> map) {
         try {
-            logger.info("Http Connection Body Created ");
+            logger.info("POST  Start Url-> " + url + " ;Body->" + map.toString() + " ::: Headers:" + headers);
             HttpEntity<MultiValueMap<String, String>> request = null;
             ResponseEntity<String> httpResponse = null;
-            String respons = null;
             URI uri = new URI(url);
             final RestTemplate restTemplate = new RestTemplateBuilder()
                     .setConnectTimeout(Duration.ofMillis(10000))
-                    .setReadTimeout(Duration.ofMillis(10000))
-                    .build();
-
-            logger.info("Http Connection Header Created ");
+                    .setReadTimeout(Duration.ofMillis(10000)).build();
             request = new HttpEntity<>(map, headers);
             httpResponse = restTemplate.postForEntity(uri, request, String.class);
-            respons = httpResponse.getBody();
-            logger.info("Request:" + url + " Body:" + map.toString() + " Response :" + respons);
-            return respons;
+            logger.info("Request:" + url + " Body:" + map.toString() + " Response :" + httpResponse.getBody());
+            return httpResponse;
         } catch (Exception e) {
             logger.error("Not able to http Api  " + e + " :: " + e.getCause());
         }
         return null;
     }
+
 
     public void sendDataViaPostApi(String url, String body) {
         StringBuffer response = new StringBuffer();
@@ -165,3 +163,31 @@ public class HttpApiConnection {
 }
 
 //  String body = "{ \"alertId\": \"" + alertId + "\", \"alertMessage\": \"" + alertmsg + "\", \"alertProcess\": \"FileCopier\"}";
+
+// insert into sys_param (tag,feature_name) values ('CustomAuthApiUrlPath','https://stage-gateway.customs.gov.kh/dmc-interface/api/v1/oauth/token','CustomCheckImei');
+//  insert into sys_param (tag ,value,feature_name) values ('CustomCheckImeiApiUrlPath','https://stage-gateway.customs.gov.kh/dmc-interface/api/v1/oauth/token','CustomCheckImei');
+// insert into sys_param (tag ,value,feature_name) values ('CustomAuthApiClientId','2','CustomCheckImei');
+// insert into sys_param (tag ,value,feature_name) values ('CustomAuthApiSecretKey','QNzhRKixNfStVkomv5S1XsQdgb3ufgAiktF2wPMz','CustomCheckImei');
+
+// f (i.getStatusCodeValue() == 200) {
+//            CustomApiResponse body = new Gson().fromJson(i.getBody(), CustomApiResponse.class);
+//            return body;
+//        } else {
+//            return null;
+//        }
+//
+//        var response =
+//        if (response.equalsIgnoreCase("ERROR")) {
+//            return null;
+//        } else {
+//            var a = taxCheckApi(conn, response, imei);
+//            if (a.getStatusCodeValue() == 200) {
+//                CustomApiResponse body = new Gson().fromJson(a.getBody(), CustomApiResponse.class);
+//                return body;
+//            } else {
+//                return null;
+//            }
+//            //  CustomApiResponse body = new Gson().fromJson(res, CustomApiResponse.class);
+//            //   return body;
+//        }
+//    }

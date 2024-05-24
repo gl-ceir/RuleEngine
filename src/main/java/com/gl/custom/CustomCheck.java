@@ -3,44 +3,67 @@ package com.gl.custom;
 import com.gl.custom.model.CustomApiResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
 
 import static com.gl.custom.dao.CustomQuery.*;
 import static com.gl.custom.service.HttpApiConnection.getDataFromApi;
 
+@Component
 public class CustomCheck {
     static final Logger logger = LogManager.getLogger(CustomCheck.class);
     // create internally conn ->  or crete con on call
-    public static boolean identifyCustomComplianceStatus(Connection conn, String imei, String source) {
+
+
+    public static String identifyCustomComplianceStatus(Connection conn, String imei, String source) {
+       return  identifyCustomComplianceStatus( conn,  imei,  source, "");
+    }
+
+
+    public static String identifyCustomComplianceStatus(Connection conn, String imei, String source,String reqId) {
         if (checkInGdceData(conn, imei)) {
-            return true;
+            return "true";
         } else {
             if (getSourceValueFromSysParam(conn, source)) {
-                return checkFromApi(conn, imei);
+                return checkFromApi(conn, imei, source, reqId);
             } else {
-                return false;
+                return "false";
             }
         }
     }
 
-    private static boolean checkFromApi(Connection conn, String imei) {
-        try {
+    private static String checkFromApi(Connection conn, String imei, String source, String reqId) {
             CustomApiResponse r = getDataFromApi(conn,imei);
-            if (r.getResult().getCustoms_duty_tax().equalsIgnoreCase("paid")) {  // respose has imei GDCE tax paid
-                saveInGdceData(conn, imei, r.getResult());
-                saveInGdceApiCallHistory(conn, imei, r.getResult(), "true", "Success");
-                return true;
-            } else {
-                saveInGdceApiCallHistory(conn, imei, r.getResult(), "false", "Success");
-                return false;
+        logger.info("fin Api response {}", r);
+        if (r.getStatus().equalsIgnoreCase("Error")) {
+            saveInGdceApiCallHistory(conn, imei, r.getMessage(), "", "Error", source);
+            return ""; // return blank
+        } else if (r.getStatus().equalsIgnoreCase("false")) {
+            saveInGdceApiCallHistory(conn, imei, r.getMessage(), "false", "Success", source);
+            return "false";
+        } else {
+            saveInGdceData(conn, imei, r.getResult() ,source ,reqId);  //
+            saveInGdceApiCallHistory(conn, imei, r.getMessage(), "true", "Success", source);
+            return "true";
             }
-        } catch (Exception e) {
-            saveInGdceApiCallHistory(conn, imei, "", "", "Success");
-            return false;
-        }
-
     }
 
 
 }
+//       try{
+//           String URL = System.getenv("db_url");
+//           String USER = System.getenv("dbUsername");
+//           String PASSWORD = System.getenv("dbPassword");
+//
+//           logger.info("credentials are {} , {} , {}", URL, USER, PASSWORD);
+//           logger.info("SAmple credentials  {} , {} ", a, b);
+//
+//           Connection connection = DatabaseConnection.getConnection();
+//           logger.info(" Connection:" + connection) ;
+//       }catch (Exception e){
+//           logger.error("Error in Conn:" + e) ;
+//       }

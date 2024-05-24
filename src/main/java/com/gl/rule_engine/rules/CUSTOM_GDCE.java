@@ -17,8 +17,8 @@ public class CUSTOM_GDCE implements ExecutionInterface {
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-
-        if (new CustomCheck().identifyCustomComplianceStatus(ruleEngine.connection, ruleEngine.imei, ruleEngine.source)) {
+        var a = CustomCheck.identifyCustomComplianceStatus(ruleEngine.connection, ruleEngine.imei, ruleEngine.source);
+        if (a.equalsIgnoreCase("true")) {
             return "Yes";
         } else {
             return "No";
