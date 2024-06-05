@@ -85,7 +85,7 @@ public class EXISTS_IN_GREYLIST_DB {
 
                     try {
                         Statement stmt = conn.createStatement();
-                        String qur = " insert into blocked_device_db  (imei ,IMSI,  msisdn , record_type , system_type , source,raw_cdr_file_name,imei_arrivalTime ,operator, file_name , created_on , modified_on    )  values "
+                        String qur = " insert into rule_action_block_imei  (imei ,IMSI,  msisdn , record_type , system_type , source,raw_cdr_file_name,imei_arrivalTime ,operator, file_name , created_on , modified_on    )  values "
                                 + "('" + args[3] + "' , '" + args[14] + "', '" + args[12] + "' ,'" + args[15] + "' , '" + args[16] + "',  '" + args[17] + "', '" + args[18] + "', '" + args[19] + "', '" + args[20] + "',   '" + args[21] + "', current_timestamp,  current_timestamp   ) ";
                         logger.info(".." + qur);
                         stmt.executeUpdate(qur);

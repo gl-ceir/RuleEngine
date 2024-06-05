@@ -4,67 +4,36 @@
  */
 package com.gl.rule_engine.rules;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+import com.gl.rule_engine.ExecutionInterface;
 import com.gl.rule_engine.RuleInfo;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.io.BufferedWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.gl.rule_engine.ExecutionInterface;
 
-/**
- *
- * @author user
- */
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+
 public class EXISTS_IN_GSMA_DETAILS_DB implements ExecutionInterface {
 
     static final Logger logger = LogManager.getLogger(EXISTS_IN_GSMA_DETAILS_DB.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        System.out.println("EXISTS_IN_GSMA_DETAILS_DB works only");
-        Statement stmt = null;
-        ResultSet result = null;
-        String res = "0";
-        try {
-            stmt = ruleEngine.connection.createStatement();
-            String query = "select count(device_id) from app.mobile_device_repository  where device_id='" + ruleEngine.imei.substring(0, 8) + "' ";
-            result = stmt.executeQuery(query);
-            try {
-                while (result.next()) {
-                    res = result.getString(1);
-                }
-            } catch (Exception e) {
-                logger.error("");
+        String query = "select * from app.mobile_device_repository where device_id='" + ruleEngine.imei.substring(0, 8) + "' ";
+        logger.debug("Query " + query);
+        var response = "NO";
+        try ( ResultSet rs = ruleEngine.statement.executeQuery(query)) {
+            while (rs.next()) {
+                response = "YES";
             }
-            if (!res.equals("0")) {
-                res = "Yes";
-            } else {
-                res = "No";
-            }
-            result.close();
-            stmt.close();
         } catch (Exception e) {
-            logger.debug("error.." + e);
-        } finally {
-            try {
-                result.close();
-                stmt.close();
-            } catch (Exception ex) {
-                logger.error("Error" + ex);
-            }
+            logger.error(e + ", [QUERY]" + query);
         }
-        return res;
+        return response;
     }
 
-       @Override
-  
+    @Override
+
     public String executeAction(RuleInfo ruleEngine) {
         try {
             switch (ruleEngine.action) {
@@ -108,7 +77,7 @@ public class EXISTS_IN_GSMA_DETAILS_DB implements ExecutionInterface {
                 break;
                 default:
                     logger.debug(" The Action " + ruleEngine.action + "  is Not Defined  ");
-           }
+            }
 
             return "Success";
         } catch (Exception e) {

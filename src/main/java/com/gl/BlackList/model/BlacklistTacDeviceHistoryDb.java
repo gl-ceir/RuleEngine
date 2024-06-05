@@ -10,15 +10,15 @@ import java.io.Serializable;
 public class BlacklistTacDeviceHistoryDb implements Serializable {
 
     public int id;
-    public String action, reasoncode, reasoncodedesc, by, country;
+    public String action, reasoncode, reasoncodedesc, by, Country;
     public String date;
 
-    public BlacklistTacDeviceHistoryDb(String action, String reasoncode, String reasoncodedesc, String by, String country, String date) {
+    public BlacklistTacDeviceHistoryDb(String action, String reasoncode, String reasoncodedesc, String by, String Country, String date) {
         this.action = action;
         this.reasoncode = reasoncode;
         this.reasoncodedesc = reasoncodedesc;
         this.by = by;
-        this.country = country;
+        this.Country = Country;
         this.date = date;
     }
 
@@ -63,12 +63,14 @@ public class BlacklistTacDeviceHistoryDb implements Serializable {
     }
 
     public String getCountry() {
-        return country;
+        return Country;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setCountry(String Country) {
+        this.Country = Country;
     }
+
+ 
 
     public String getDate() {
         return date;
@@ -77,7 +79,10 @@ public class BlacklistTacDeviceHistoryDb implements Serializable {
     public void setDate(String date) {
         this.date = date;
     }
-    
-    
 
+    @Override
+    public String toString() {
+        return "BlacklistTacDeviceHistoryDb{" + "id=" + id + ", action=" + action + ", reasoncode=" + reasoncode + ", reasoncodedesc=" + reasoncodedesc + ", by=" + by + ", Country=" + Country + ", date=" + date + '}';
+    }
+    
 }

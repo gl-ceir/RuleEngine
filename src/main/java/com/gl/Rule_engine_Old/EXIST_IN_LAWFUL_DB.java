@@ -28,7 +28,7 @@ public class EXIST_IN_LAWFUL_DB {
                int count1 = 0;
                stmt = conn.createStatement();
 
-               result2 = stmt.executeQuery("select  count(imei_esn_meid) from device_lawful_db where imei_esn_meid='" + args[3] + "' ");
+               result2 = stmt.executeQuery("select  count(imei_esn_meid) from DEVICE_LAWFUL where imei_esn_meid='" + args[3] + "' ");
                logger.debug("Qury ..select count(imei_esn_meid) from device_lawful_db where imei_esn_meid='" + args[3] + "' ");
                try {
                     while (result2.next()) {

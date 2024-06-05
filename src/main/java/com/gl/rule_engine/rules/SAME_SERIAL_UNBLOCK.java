@@ -29,7 +29,7 @@ public class SAME_SERIAL_UNBLOCK implements  ExecutionInterface{
         ResultSet result = null;
         try {
             String opr1 = null;
-            String qury = "  select SN_OF_DEVICE    from device_operator_db   where imei_esn_meid = '" + ruleEngine.imei + "'  ";
+            String qury = "  select SN_OF_DEVICE    from DEVICE_OPERATOR   where imei_esn_meid = '" + ruleEngine.imei + "'  ";
             logger.debug("qury " + qury);
             stmt = ruleEngine.connection.createStatement();
             result = stmt.executeQuery(qury);

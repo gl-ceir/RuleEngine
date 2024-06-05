@@ -25,9 +25,7 @@ public class EncriptonBlacklistService {
 
     static final Logger logger = LogManager.getLogger(EncriptonBlacklistService.class);
     static Cipher cipher;
-
-  //  static String smpleString = "{ \"refcode\":\"29022016012414\", \"responsestatus\":\"success\", \"deviceid\":\"352018062027392\", \"partnerid\":\"Acme\", \"blockliststatus\":\"No\", \"generalliststatus\":\"No\", \"imeihistory\":[ { \"action\":\"Block Insert\", \"reasoncode\": \"0011\", \"reasoncodedesc\": \"Stolen or Lost\" , \"date\":\"2014-08-02 12:05:24.0\", \"by\":\"Tele 2 AB\", \"Country\":\"Sweden\" }, { \"action\":\"Block Remove\", \"reasoncode\": \"0014\", \"reasoncodedesc\": \"Lost and Found\" , \"date\":\"2014-08-11 12:06:41.0\", \"by\":\"Tele 2 AB\", \"Country\":\"Sweden\" } ], \"manufacturer\":\"Apple Inc\", \"brandname\":\"Apple\", \"marketingname\":\"Apple iPhone 5S (A1457)\", \"modelname\":\"iPhone 5S (A1457)\", \"band\":\"WCDMA FDD Band I, WCDMA FDD Band VIII, LTE FDD BAND 20, LTE FDD BAND 5, LTE FDD BAND 2, GSM 900, LTE FDD BAND 3, GSM 1800, WCDMA FDD Band II, WCDMA FDD Band V, LTE FDD BAND 1, LTE FDD BAND 8, No multi SIM support, GSM850 (GSM800)\", \"operatingsys\":\"iOS\", \"nfc\":\"No\", \"bluetooth\":\"Yes\", \"WLAN\":\"Yes\", \"devicetype\":\"Smartphone\" }";
-
+ 
     public static String startBlacklistApp(RuleInfo re) {
         LogWriter logWriter = new LogWriter();
         String status = null;
@@ -37,8 +35,12 @@ public class EncriptonBlacklistService {
             try {
                 String logpath = blacklist.getValueFromSysParam(re.connection, "GSMA_BLACKLIST_LogPath");
                 logWriter.writeLogBlacklist(logpath, "Start with Imei " + re.imei);
-                 String message = verifyGSMA(re);
-//                String message = smpleString;
+                String message = null;
+                if (re.imei.equals("352018062027392")) { // testing purpose
+                    message = "{ \"refcode\":\"29022016012414\", \"responsestatus\":\"success\", \"deviceid\":\"352018062027392\", \"partnerid\":\"Acme\", \"blockliststatus\":\"No\", \"generalliststatus\":\"No\", \"imeihistory\":[ { \"action\":\"Block Insert\", \"reasoncode\": \"0011\", \"reasoncodedesc\": \"Stolen or Lost\" , \"date\":\"2014-08-02 12:05:24.0\", \"by\":\"Tele 2 AB\", \"Country\":\"Sweden\" }, { \"action\":\"Block Remove\", \"reasoncode\": \"0014\", \"reasoncodedesc\": \"Lost and Found\" , \"date\":\"2014-08-11 12:06:41.0\", \"by\":\"Tele 2 AB\", \"Country\":\"Sweden\" } ], \"manufacturer\":\"Apple Inc\", \"brandname\":\"Apple\", \"marketingname\":\"Apple iPhone 5S (A1457)\", \"modelname\":\"iPhone 5S (A1457)\", \"band\":\"WCDMA FDD Band I, WCDMA FDD Band VIII, LTE FDD BAND 20, LTE FDD BAND 5, LTE FDD BAND 2, GSM 900, LTE FDD BAND 3, GSM 1800, WCDMA FDD Band II, WCDMA FDD Band V, LTE FDD BAND 1, LTE FDD BAND 8, No multi SIM support, GSM850 (GSM800)\", \"operatingsys\":\"iOS\", \"nfc\":\"No\", \"bluetooth\":\"Yes\", \"WLAN\":\"Yes\", \"devicetype\":\"Smartphone\" }";
+                } else {
+                    message = verifyGSMA(re);
+                }
                 logger.debug("Response message " + message);
                 logWriter.writeLogBlacklist(logpath, "End Result for  " + re.imei + " :: " + message);
                 BlacklistTacDb blacklistTacDb = (new Gson().fromJson(message, BlacklistTacDb.class));
@@ -49,7 +51,6 @@ public class EncriptonBlacklistService {
                     logger.warn("Not able to retrieve info for imei  =" + re.imei + ", Response: " + message);
                     status = "NAN";
                 }
-
             } catch (Exception e) {
                 logger.error("Exception " + e);
             }

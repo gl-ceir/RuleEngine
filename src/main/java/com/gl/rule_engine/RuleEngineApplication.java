@@ -34,7 +34,7 @@ public class RuleEngineApplication {
 //
 //                .map(     ruleClass -> )
 //
-//          String aasas = stream.findFirst()
+//          String streamObj = stream.findFirst()
 //                .map( ruleClass ->   { return   ruleClass.executeRule(ruleEngine);}  )
 //                .or(ruleClass ->   { return   ruleClass.executeRule(ruleEngine);} )
 //                  .

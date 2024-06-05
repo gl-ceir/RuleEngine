@@ -44,7 +44,7 @@ public class BlacklistServiceDao {
         String status = null;
         try {
             try (Statement stmt = conn.createStatement()) {
-                String query = " select blocklist_status from blacklist_imei_db  where device_id = '" + Imei + "'   ";
+                String query = " select blocklist_status from blacklist_imei_details  where device_id = '" + Imei + "'   ";
                 logger.debug("Query [" + query + "]");
                 try (ResultSet rs = stmt.executeQuery(query)) {
                     while (rs.next()) {
@@ -75,7 +75,7 @@ public class BlacklistServiceDao {
     private int insertBlacklistTacDbAndGetId(Connection conn, BlacklistTacDb blacklistTacDb) {
         int generatedKey = 0;
 
-        String query = " insert into blacklist_imei_db (ref_code, response_status, device_id, partner_id, blocklist_status, generallist_status,"
+        String query = " insert into blacklist_imei_details (ref_code, response_status, device_id, partner_id, blocklist_status, generallist_status,"
                 + "manufacturer, brand_name, marketing_name, model_name , band , operating_sys , nfc , bluetooth , wlan , device_type, "
                 + "created_on , modified_on)"
                 + "values ('" + blacklistTacDb.getRefcode() + "', '" + blacklistTacDb.getResponsestatus() + "' , '" + blacklistTacDb.getDeviceid() + "' ,'" + blacklistTacDb.getPartnerid() + "' , '" + blacklistTacDb.getBlockliststatus() + "', '" + blacklistTacDb.getGeneralliststatus() + "' , "

@@ -33,7 +33,7 @@ class SAME_OPERATOR_UNBLOCK {
             String opr1 = null;
             String opr2 = null;
               stmt2 = conn.createStatement();
-            String qury = " select OPERATOR_TYPE_ID from stolenand_recovery_mgmt where  TXN_ID = (select TXN_ID  from  device_operator_db where IMEI_ESN_MEID = '" + args[3] + "' )";
+            String qury = " select OPERATOR_TYPE_ID from STOLEN_AND_RECOVERY_TXN where  TXN_ID = (select TXN_ID  from  DEVICE_OPERATOR where IMEI_ESN_MEID = '" + args[3] + "' )";
               result1 = stmt2.executeQuery(qury);
             logger.debug(qury);
             try {
@@ -44,7 +44,7 @@ class SAME_OPERATOR_UNBLOCK {
                 logger.error("opr1 " + e);
             }
 
-            qury = " select OPERATOR_TYPE_ID from stolenand_recovery_mgmt where  TXN_ID =  '" + args[14] + "' ";
+            qury = " select OPERATOR_TYPE_ID from STOLEN_AND_RECOVERY_TXN where  TXN_ID =  '" + args[14] + "' ";
             result1 = stmt2.executeQuery(qury);
             logger.debug(qury);
             try {
