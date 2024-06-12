@@ -30,7 +30,7 @@ class SAME_DEVICETYPE_UNBLOCK {
             String opr1 =null;
          
             stmt = conn.createStatement();
-            String qury = "  select DEVICE_TYPE    from device_operator_db  where imei_esn_meid='" + args[3] + "'  ";
+            String qury = "  select DEVICE_TYPE    from DEVICE_OPERATOR  where imei_esn_meid='" + args[3] + "'  ";
             result = stmt.executeQuery(qury);
             logger.debug(qury);
             try {

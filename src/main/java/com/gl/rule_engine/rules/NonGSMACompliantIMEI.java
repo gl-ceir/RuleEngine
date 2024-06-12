@@ -1,29 +1,40 @@
 package com.gl.rule_engine.rules;
 
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+
 import com.gl.rule_engine.ExecutionInterface;
 import com.gl.rule_engine.RuleInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
+import java.sql.Statement;
 
-public class NATIONAL_WHITELISTS implements ExecutionInterface {
+/**
+ *
+ * @author maverick
+ */
+public class NonGSMACompliantIMEI implements ExecutionInterface {
 
-    static final Logger logger = LogManager.getLogger(NATIONAL_WHITELISTS.class);
+    static final Logger logger = LogManager.getLogger(NonGSMACompliantIMEI.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String query = "select  * from  " + ruleEngine.app + ".national_whitelist where  imei like '" + ruleEngine.imei + "%'   ";
-        logger.debug("Query " + query);
-        var response = "NO";
-        try ( ResultSet rs = ruleEngine.statement.executeQuery(query)) {
+        String res = "No";
+        // IMEI is GSMA TAC Compliant[SG1]  from mobile_device_repository
+        String query = "select count(*) from  " + ruleEngine.app + ".national_whitelist where imei like '" + ruleEngine.imei + "%' ";
+        try (Statement stmt = ruleEngine.connection.createStatement(); ResultSet rs = stmt.executeQuery(query);) {
             while (rs.next()) {
-                response = "YES";
+                res = "Yes";
             }
+            logger.info("value from db " + res);
         } catch (Exception e) {
-            logger.error(e + ", [QUERY]" + query);
+            logger.error("Error.." + e);
         }
-        return response;
+        return res;
     }
 
     @Override

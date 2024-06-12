@@ -31,7 +31,7 @@ public  class EXIST_IN_LAWFUL_DB implements  ExecutionInterface {
                int count1 = 0;
                stmt = ruleEngine.connection.createStatement();
 
-               result2 = stmt.executeQuery("select  count(imei_esn_meid) from device_lawful_db where imei_esn_meid='" + ruleEngine.imei + "' ");
+               result2 = stmt.executeQuery("select  count(imei_esn_meid) from DEVICE_LAWFUL where imei_esn_meid='" + ruleEngine.imei + "' ");
                logger.debug("Qury ..select count(imei_esn_meid) from device_lawful_db where imei_esn_meid='" + ruleEngine.imei + "' ");
                try {
                     while (result2.next()) {

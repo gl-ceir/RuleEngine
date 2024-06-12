@@ -33,7 +33,7 @@ public class SAME_DEVICETYPE_UNBLOCK implements  ExecutionInterface{
             String opr1 =null;
          
             stmt = ruleEngine.connection.createStatement();
-            String qury = "  select DEVICE_TYPE    from device_operator_db  where imei_esn_meid='" + ruleEngine.imei + "'  ";
+            String qury = "  select DEVICE_TYPE    from DEVICE_OPERATOR  where imei_esn_meid='" + ruleEngine.imei + "'  ";
             result = stmt.executeQuery(qury);
             logger.debug(qury);
             try {

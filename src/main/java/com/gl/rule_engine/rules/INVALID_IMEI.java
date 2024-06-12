@@ -7,13 +7,13 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 
-public class NATIONAL_WHITELISTS implements ExecutionInterface {
+public class INVALID_IMEI implements ExecutionInterface {
 
-    static final Logger logger = LogManager.getLogger(NATIONAL_WHITELISTS.class);
+    static final Logger logger = LogManager.getLogger(INVALID_IMEI.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String query = "select  * from  " + ruleEngine.app + ".national_whitelist where  imei like '" + ruleEngine.imei + "%'   ";
+        String query = "select  * from  " + ruleEngine.app + ".eirs_invalid_imei where  imei like '" + ruleEngine.imei + "%'   ";
         logger.debug("Query " + query);
         var response = "NO";
         try ( ResultSet rs = ruleEngine.statement.executeQuery(query)) {
