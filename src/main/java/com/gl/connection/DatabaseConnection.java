@@ -2,49 +2,58 @@ package com.gl.connection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.jasypt.util.text.BasicTextEncryptor;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 @Component
 public class DatabaseConnection {
+
     static final Logger logger = LogManager.getLogger(DatabaseConnection.class);
 
-    @Autowired
-    static  Environment en;
-
-    @Value("db_url")
-   static String a;
-    @Value("dbUsername")
-    static  String b;
-
-    private DatabaseConnection() {}
+    private DatabaseConnection() {
+    }
     private static Connection connection = null;
 
-    public static Connection getConnection() throws SQLException {
-        if (connection == null || connection.isClosed()) {
-            synchronized (DatabaseConnection.class) {
-                if (connection == null || connection.isClosed()) {
-                    String URL = System.getenv("db_url");
-                    String USER = System.getenv("dbUsername");
-                    String PASSWORD = System.getenv("dbPassword");
+    @PostConstruct
+    public static void initialize() throws Exception {
+        createConnection();
+    }
 
-                    logger.info(  ""+  en.getActiveProfiles());
-                    logger.info("credentials are {} , {} , {}", URL, USER, PASSWORD);
-                    logger.info("SAmple credentials  {} , {} ", a, b);
-
-                    connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                }
-            }
+    private static void createConnection() {
+        try {//   var propertyReader = new PropertyReader();
+            String jdbcDriver = "com.mysql.cj.jdbc.Driver"; //  propertyReader.getConfigPropValue("jdbc_driver").trim();
+            String dbURL = "jdbc:mysql://64.227.146.191/app"; //   propertyReader.getConfigPropValue("db_url").trim();
+            String username = "cdrp"; //  propertyReader.getConfigPropValue("dbUsername").trim();
+            String password = "Cdrp@1234";
+//            if (jdbcDriver.contains("mysql")) password = propertyReader.getConfigPropValue("dbPassword").trim();
+//            else password = decryptor(propertyReader.getConfigPropValue("dbEncyptPassword").trim());
+            Class.forName(jdbcDriver);
+            connection = DriverManager.getConnection(dbURL, username, password);
+        } catch (Exception e) {
+            logger.error("Not able to conn {}", e.getLocalizedMessage());
         }
+    }
+
+    public static String decryptor(String encryptedText) {
+        BasicTextEncryptor encryptor = new BasicTextEncryptor();
+        encryptor.setPassword(System.getenv("JASYPT_ENCRYPTOR_PASSWORD"));
+        return encryptor.decrypt(encryptedText);
+    }
+
+
+    public static Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed())
+                createConnection();
+        } catch (Exception e) {
+            logger.error("{}", e.getLocalizedMessage());
+        }
+        logger.info("Connection {}", connection);
         return connection;
     }
 }
 
-
-//Connection connection = DatabaseConnection.getConnection();

@@ -1,11 +1,9 @@
 package com.gl.custom;
 
+import com.gl.connection.DatabaseConnection;
 import com.gl.custom.model.CustomApiResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -16,13 +14,20 @@ import static com.gl.custom.service.HttpApiConnection.getDataFromApi;
 @Component
 public class CustomCheck {
     static final Logger logger = LogManager.getLogger(CustomCheck.class);
-    // create internally conn ->  or crete con on call
 
-
-    public static String identifyCustomComplianceStatus(Connection conn, String imei, String source) {
-       return  identifyCustomComplianceStatus( conn,  imei,  source, "");
+    public static String identifyCustomComplianceStatus(String imei, String source) {
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            logger.info("Checking Connection : {}", conn);
+        } catch (Exception e) {
+        }
+       return identifyCustomComplianceStatus( conn,  imei,  source, "");
     }
 
+    public static String identifyCustomComplianceStatus(Connection conn, String imei, String source) {
+        return  identifyCustomComplianceStatus( conn,  imei,  source, "");
+    }
 
     public static String identifyCustomComplianceStatus(Connection conn, String imei, String source,String reqId) {
         if (checkInGdceData(conn, imei)) {
@@ -51,17 +56,14 @@ public class CustomCheck {
             return "true";
             }
     }
-
-
 }
 //       try{
 //           String URL = System.getenv("db_url");
 //           String USER = System.getenv("dbUsername");
 //           String PASSWORD = System.getenv("dbPassword");
-//
 //           logger.info("credentials are {} , {} , {}", URL, USER, PASSWORD);
 //           logger.info("SAmple credentials  {} , {} ", a, b);
-//
+//           create internally conn ->  or crete con on call
 //           Connection connection = DatabaseConnection.getConnection();
 //           logger.info(" Connection:" + connection) ;
 //       }catch (Exception e){

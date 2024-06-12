@@ -34,6 +34,7 @@ public class HttpApiConnection {
             var a = authenticationApi(conn);
             if (a != null && a.getStatusCodeValue() == 200) {
                 AuthApiResponse b = new Gson().fromJson(a.getBody(), AuthApiResponse.class);
+            //    insertIntoCustomAuthToken(b, conn);
                 return getCustomApiResponse(conn, imei, b.getAccess_token());
             } else {
                 return new CustomApiResponse("Error", "Client authentication failed");
@@ -43,7 +44,8 @@ public class HttpApiConnection {
     }
 
     private static String getTokenDetails(Connection conn) {
-      //  String value = getValueFromSysParam(conn, "String tag");
+      //  String value = getValueFromCustomAuthToken(conn, "String tag");
+
         return null;
     }
 

@@ -35,7 +35,7 @@ public class CustomQuery {
 
 
     public static boolean checkInGdceData(Connection conn, String imei) {
-        String query = "select  * from app.gdce_data where imei like '" + imei + "%' ";
+        String query = "select  * from app.gdce_data where imei  = SUBSTRING('"+imei+"' , 1, 14)  ";
         logger.debug("Query " + query);
         var response = false;
         try (Statement st = conn.createStatement();

@@ -33,6 +33,8 @@ public class RuleInfo {
     public String txn_id;
     public String fileArray;
 
+    public  String actualImei;
+
     public Connection connection;
     public Statement statement;
     public BufferedWriter bw;
@@ -166,9 +168,46 @@ public class RuleInfo {
         this.fileName = fileName;
         this.connection = connection;
         this.statement = statement;
-
     }
 
+    public RuleInfo(String app, String aud, String rep, String edrapp, String imei, String msisdn, String imsi, String ruleName, String executeRuleAction, String featureName, String period, String action, String operator, String fileName, Connection connection, Statement statement, String actualImei) {
+        this.app = app;
+        this.aud = aud;
+        this.rep = rep;
+        this.edrapp = edrapp;
+        this.imei = imei;
+        this.msisdn = msisdn;
+        this.imsi = imsi;
+        this.ruleName = ruleName;
+        this.executeRuleAction = executeRuleAction;
+        this.featureName = featureName;
+        this.period = period;
+        this.action = action;
+        this.operator = operator;
+        this.fileName = fileName;
+        this.connection = connection;
+        this.statement = statement;
+        this.actualImei =actualImei;
+    }
+
+    public RuleInfo(String app, String aud, String rep, String edrapp, String imei, String msisdn, String imsi, String ruleName, String executeRuleAction, String featureName, String period, String action, String operator, String fileName, Connection connection,String actualImei) {
+        this.app = app;
+        this.aud = aud;
+        this.rep = rep;
+        this.edrapp = edrapp;
+        this.imei = imei;
+        this.msisdn = msisdn;
+        this.imsi = imsi;
+        this.ruleName = ruleName;
+        this.executeRuleAction = executeRuleAction;
+        this.featureName = featureName;
+        this.period = period;
+        this.action = action;
+        this.operator = operator;
+        this.fileName = fileName;
+        this.connection = connection;
+        this.actualImei =actualImei;
+    }
 
 //     {device_info.get("rule_name"),  //0  ruleName
 //"2",   //1   executeRuleExecuteAction 1-rule,2-action

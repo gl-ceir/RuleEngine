@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.gl.rule_engine.rules;
 
 import com.gl.rule_engine.ExecutionInterface;
@@ -10,16 +6,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
-import java.sql.Statement;
 
+public class INVALID_IMEI implements ExecutionInterface {
 
-public class GSMA_TYPE_APPROVED implements ExecutionInterface {
-
-    static final Logger logger = LogManager.getLogger(GSMA_TYPE_APPROVED.class);
+    static final Logger logger = LogManager.getLogger(INVALID_IMEI.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String query = "select * from app.mobile_device_repository where device_id='" + ruleEngine.imei.substring(0, 8) + "' and is_type_approved=1";
+        String query = "select  * from  " + ruleEngine.app + ".eirs_invalid_imei where  imei like '" + ruleEngine.imei + "%'   ";
         logger.debug("Query " + query);
         var response = "NO";
         try ( ResultSet rs = ruleEngine.statement.executeQuery(query)) {
@@ -35,6 +29,7 @@ public class GSMA_TYPE_APPROVED implements ExecutionInterface {
     @Override
     public String executeAction(RuleInfo ruleEngine) {
         try {
+            logger.debug("Action::: " + ruleEngine.action);
             switch (ruleEngine.action) {
                 case "Allow": {
                     logger.debug("Action is Allow");
@@ -46,28 +41,23 @@ public class GSMA_TYPE_APPROVED implements ExecutionInterface {
                 break;
                 case "Reject": {
                     logger.debug("Action is Reject");
-                    String fileString = ruleEngine.fileArray + " , Error Code :CON_RULE_0003 , Error Description :TAC in IMEI is not approved TAC from GSMA Tac Details ";
+                    String fileString = ruleEngine.fileArray + " ,Error Code :CON_RULE_0019, Error Description : IMEI/ESN/MEID is already present in the system  ";
                     ruleEngine.bw.write(fileString);
                     ruleEngine.bw.newLine();
-                }
-                break;
-                case "Block": {
-                    logger.debug("Action is Block");
+
                 }
                 break;
                 case "Report": {
+                    logger.debug("Action is Report");
+
+                }
+                break;
+                case "Report2": {
                     logger.debug("Action is Report");
                 }
                 break;
                 case "SYS_REG": {
                     logger.debug("Action is SYS_REG");
-                }
-                break;
-                case "NAN": {
-                    logger.debug("Action is NAN");
-                    String fileString = ruleEngine.fileArray + " , Error Code :CON_RULE_0002, Error Description :Could not ruleEngine.connectionect to GSMA server.Try after Some Time.  ";
-                    ruleEngine.bw.write(fileString);
-                    ruleEngine.bw.newLine();
                 }
                 break;
                 case "USER_REG": {

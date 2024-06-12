@@ -63,7 +63,10 @@ public interface RulesList {
 
                 new CUSTOM_GDCE(),
                 new LOCAL_MANUFACTURER(),
-                new GSMA_TYPE_APPROVED()
+                new GSMA_TYPE_APPROVED(),
+
+                new INVALID_IMEI(),
+                new NWL_CUSTOM_VALIDITY_FLAG()
         );
     }
 }
