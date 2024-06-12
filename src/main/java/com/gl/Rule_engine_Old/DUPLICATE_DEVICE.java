@@ -1,29 +1,21 @@
 package com.gl.Rule_engine_Old;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.BufferedWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-/**
- *
- * @author maverick
- */
-public class NATIONAL_WHITELISTS {
+public class DUPLICATE_DEVICE {
 
-    static final Logger logger = LogManager.getLogger(NATIONAL_WHITELISTS.class);
+
+    static final Logger logger = LogManager.getLogger(DUPLICATE_DEVICE.class);
 
     static String executeRule(String[] args, Connection conn) {
         String res = "No";
-        String query = "select count(*) from national_whitelist where imei like '" + args[3] + "%' ";
+        String query = "select count(*) from duplicate_device_detail where imei like '" + args[3] + "%' ";
         logger.info("[" + query +"]");
         try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(query);) {
             try {
@@ -92,5 +84,6 @@ public class NATIONAL_WHITELISTS {
             return "Failure";
         }
     }
+
 
 }

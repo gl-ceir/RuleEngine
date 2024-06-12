@@ -28,8 +28,8 @@ public class EXISTS_IN_GREYLIST_DB {
         try {
             logger.info("Connection" + conn);
             stmt2 = conn.createStatement();
-            logger.info("select count(imei ) from app.greylist where imei='" + args[3] + "' ");
-            result1 = stmt2.executeQuery("select count(imei) from app.greylist  where imei ='" + args[3] + "' ");
+            logger.info("select count(imei ) from app.grey_list where imei='" + args[3] + "' ");
+            result1 = stmt2.executeQuery("select count(imei) from app.grey_list  where imei ='" + args[3] + "' ");
             String res2 = "0";
             try {
                 while (result1.next()) {
