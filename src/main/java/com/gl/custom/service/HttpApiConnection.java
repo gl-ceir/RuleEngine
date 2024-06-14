@@ -91,7 +91,6 @@ public class HttpApiConnection {
         }
     }
 
-
     static ResponseEntity<String> httpConnectionForApp(String url, HttpHeaders headers, MultiValueMap<String, String> map) {
         try {
             logger.info("POST  Start Url-> " + url + " ;Body->" + map.toString() + " ::: Headers:" + headers);
@@ -99,8 +98,9 @@ public class HttpApiConnection {
             ResponseEntity<String> httpResponse = null;
             URI uri = new URI(url);
             final RestTemplate restTemplate = new RestTemplateBuilder()
-                    .setConnectTimeout(Duration.ofMillis(10000))
-                    .setReadTimeout(Duration.ofMillis(10000)).build();
+                    .setConnectTimeout(Duration.ofSeconds(120))
+                    .setReadTimeout(Duration.ofSeconds(120))
+                    .build();
             request = new HttpEntity<>(map, headers);
             httpResponse = restTemplate.postForEntity(uri, request, String.class);
             logger.info("Request:" + url + " Body:" + map.toString() + " Response :" + httpResponse.getBody());
