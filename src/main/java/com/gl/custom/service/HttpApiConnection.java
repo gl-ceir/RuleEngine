@@ -45,7 +45,6 @@ public class HttpApiConnection {
 
     private static String getTokenDetails(Connection conn) {
       //  String value = getValueFromCustomAuthToken(conn, "String tag");
-
         return null;
     }
 

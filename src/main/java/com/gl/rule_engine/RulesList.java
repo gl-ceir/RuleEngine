@@ -69,7 +69,9 @@ public interface RulesList {
                 new NWL_CUSTOM_VALIDITY_FLAG(),
 
                 new CUSTOM_IMEI(),
-                new STOLEN_DEVICE()
+                new STOLEN_DEVICE(),
+
+                new GREYLIST_BY_LOST_STOLEN()
         );
     }
 }

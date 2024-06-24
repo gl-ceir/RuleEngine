@@ -34,17 +34,18 @@ public class CustomQuery {
     }
 
 
-    public static boolean checkInGdceData(Connection conn, String imei) {
+    public static String checkInGdceData(Connection conn, String imei) {
         String query = "select  * from app.gdce_data where imei  = SUBSTRING('"+imei+"' , 1, 14)  ";
         logger.debug("Query " + query);
-        var response = false;
+        var response = "FALSE";
         try (Statement st = conn.createStatement();
              ResultSet rs = st.executeQuery(query)) {
             while (rs.next()) {
-                response = true;
+                response = "TRUE";
             }
         } catch (Exception e) {
             logger.error(e + ", [QUERY]" + query);
+            return "ERROR";
         }
         return response;
     }

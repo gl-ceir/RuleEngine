@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.gl.rule_engine.rules;
 
 import com.gl.rule_engine.ExecutionInterface;
@@ -6,17 +11,19 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
+import java.sql.Statement;
 
-public class NWL_CUSTOM_VALIDITY_FLAG implements ExecutionInterface {
 
-    static final Logger logger = LogManager.getLogger(NWL_CUSTOM_VALIDITY_FLAG.class);
+public class GREYLIST_BY_LOST_STOLEN implements ExecutionInterface {
+
+    static final Logger logger = LogManager.getLogger(GREYLIST_BY_LOST_STOLEN.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String query = "select  * from  " + ruleEngine.app + ".national_whitelist where validity_flag = 1 and gdce_imei_status in (0,3)  and imei like '" + ruleEngine.imei + "%'   ";
+        String query = "select * from  " + ruleEngine.app + ".grey_list  where imei  like '" + ruleEngine.imei + "%'  and source in ('stolen', 'lost' , 'STOLEN' ,'LOST'  )";
         logger.debug("Query " + query);
         var response = "NO";
-        try ( ResultSet rs = ruleEngine.statement.executeQuery(query)) {
+        try ( ResultSet rs =ruleEngine.statement.executeQuery(query)) {
             while (rs.next()) {
                 response = "YES";
             }
@@ -29,7 +36,6 @@ public class NWL_CUSTOM_VALIDITY_FLAG implements ExecutionInterface {
     @Override
     public String executeAction(RuleInfo ruleEngine) {
         try {
-            logger.debug("Action::: " + ruleEngine.action);
             switch (ruleEngine.action) {
                 case "Allow": {
                     logger.debug("Action is Allow");
@@ -47,13 +53,24 @@ public class NWL_CUSTOM_VALIDITY_FLAG implements ExecutionInterface {
 
                 }
                 break;
+                case "Block": {
+                    logger.debug("Action is Block");
+
+                    try {
+                        Statement stmt = ruleEngine.connection.createStatement();
+                        String qur = " insert into rule_action_block_imei  (imei ,IMSI,  msisdn , record_type , system_type , source,raw_cdr_file_name,imei_arrivalTime ,operator, file_name , created_on , modified_on    )  values "
+                                + "('" + ruleEngine.imei + "' , '" + ruleEngine.imsi + "', '" + ruleEngine.msisdn + "' ,'" + ruleEngine.recordType + "' , '" + ruleEngine.systemType + "',  '" + ruleEngine.source + "', '" + ruleEngine.rawCdrFileName + "', '" + ruleEngine.imeiArrivalTime + "', '" + ruleEngine.operator + "',   '" + ruleEngine.fileName + "', current_timestamp,  current_timestamp   ) ";
+                        logger.info(".." + qur);
+                        stmt.executeUpdate(qur);
+                        stmt.close();
+                    } catch (Exception e) {
+                        logger.debug("Error " + e);
+                    }
+                }
+                break;
                 case "Report": {
                     logger.debug("Action is Report");
 
-                }
-                break;
-                case "Report2": {
-                    logger.debug("Action is Report");
                 }
                 break;
                 case "SYS_REG": {
