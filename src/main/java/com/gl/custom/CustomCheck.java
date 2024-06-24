@@ -30,8 +30,9 @@ public class CustomCheck {
     }
 
     public static String identifyCustomComplianceStatus(Connection conn, String imei, String source,String reqId) {
-        if (checkInGdceData(conn, imei)) {
-            return "true";
+        var result = checkInGdceData(conn, imei);
+        if (!result.equalsIgnoreCase("false")) {
+            return result;
         } else {
             if (getSourceValueFromSysParam(conn, source)) {
                 return checkFromApi(conn, imei, source, reqId);
@@ -46,14 +47,14 @@ public class CustomCheck {
         logger.info("fin Api response {}", r);
         if (r.getStatus().equalsIgnoreCase("Error")) {
             saveInGdceApiCallHistory(conn, imei, r.getMessage(), "", "Error", source);
-            return ""; // return blank
+            return "ERROR"; // return blank
         } else if (r.getStatus().equalsIgnoreCase("false")) {
             saveInGdceApiCallHistory(conn, imei, r.getMessage(), "false", "Success", source);
-            return "false";
+            return "FALSE";
         } else {
             saveInGdceData(conn, imei, r.getResult() ,source ,reqId);  //
             saveInGdceApiCallHistory(conn, imei, r.getMessage(), "true", "Success", source);
-            return "true";
+            return "TRUE";
             }
     }
 }

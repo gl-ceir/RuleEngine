@@ -7,29 +7,29 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
 
-public class NWL_CUSTOM_VALIDITY_FLAG implements ExecutionInterface {
+public class CUSTOM_IMEI implements ExecutionInterface {
 
-    static final Logger logger = LogManager.getLogger(NWL_CUSTOM_VALIDITY_FLAG.class);
+    static final Logger logger = LogManager.getLogger(CUSTOM_IMEI.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String query = "select  * from  " + ruleEngine.app + ".national_whitelist where validity_flag = 1 and gdce_imei_status in (0,3)  and imei like '" + ruleEngine.imei + "%'   ";
+        String query = "select *  from " + ruleEngine.app + ".custom_imei_db where imei like '" + ruleEngine.imei + "%' ";
         logger.debug("Query " + query);
         var response = "NO";
-        try ( ResultSet rs = ruleEngine.statement.executeQuery(query)) {
+        try (ResultSet rs = ruleEngine.statement.executeQuery(query)) {
             while (rs.next()) {
                 response = "YES";
             }
         } catch (Exception e) {
-            logger.error(e + ", [QUERY]" + query);
+            logger.error(e.toString() + ", [QUERY]" + query);
         }
         return response;
     }
 
+
     @Override
     public String executeAction(RuleInfo ruleEngine) {
         try {
-            logger.debug("Action::: " + ruleEngine.action);
             switch (ruleEngine.action) {
                 case "Allow": {
                     logger.debug("Action is Allow");
@@ -40,19 +40,13 @@ public class NWL_CUSTOM_VALIDITY_FLAG implements ExecutionInterface {
                 }
                 break;
                 case "Reject": {
-                    logger.debug("Action is Reject");
-                    String fileString = ruleEngine.fileArray + " ,Error Code :CON_RULE_0019, Error Description : IMEI/ESN/MEID is already present in the system  ";
-                    ruleEngine.bw.write(fileString);
-                    ruleEngine.bw.newLine();
-
+                }
+                break;
+                case "Block": {
+                    logger.debug("Action is Block");
                 }
                 break;
                 case "Report": {
-                    logger.debug("Action is Report");
-
-                }
-                break;
-                case "Report2": {
                     logger.debug("Action is Report");
                 }
                 break;
@@ -74,5 +68,4 @@ public class NWL_CUSTOM_VALIDITY_FLAG implements ExecutionInterface {
             return "Failure";
         }
     }
-
 }

@@ -66,7 +66,12 @@ public interface RulesList {
                 new GSMA_TYPE_APPROVED(),
 
                 new INVALID_IMEI(),
-                new NWL_CUSTOM_VALIDITY_FLAG()
+                new NWL_CUSTOM_VALIDITY_FLAG(),
+
+                new CUSTOM_IMEI(),
+                new STOLEN_DEVICE(),
+
+                new GREYLIST_BY_LOST_STOLEN()
         );
     }
 }
