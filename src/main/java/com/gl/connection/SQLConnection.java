@@ -21,8 +21,6 @@ public class SQLConnection {
 
     public static PropertyReader propertyReader;
 
-
-
     public static Connection getConnection() {
         if (Objects.isNull(propertyReader)) {
             propertyReader = new PropertyReader();
@@ -32,11 +30,7 @@ public class SQLConnection {
             String jdbcDriver = propertyReader.getConfigPropValue("jdbc_driver").trim();
             String dbURL = propertyReader.getConfigPropValue("db_url").trim();
             String username = propertyReader.getConfigPropValue("dbUsername").trim();
-            String password;
-            if (jdbcDriver.contains("mysql"))
-                password = propertyReader.getConfigPropValue("dbPassword").trim();
-            else
-                password = decryptor(propertyReader.getConfigPropValue("dbEncyptPassword").trim());
+            String password = decryptor(propertyReader.getConfigPropValue("dbEncyptPassword").trim());
             Class.forName(jdbcDriver);
             conn = DriverManager.getConnection(dbURL, username, password);
             if (conn != null)

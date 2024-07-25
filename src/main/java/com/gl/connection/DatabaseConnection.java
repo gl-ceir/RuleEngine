@@ -3,14 +3,17 @@ package com.gl.connection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jasypt.util.text.BasicTextEncryptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.sql.Connection;
-import java.sql.DriverManager;
 
 @Component
 public class DatabaseConnection {
+
+    @Autowired
+    static SQLConnection sQLConnection;
 
     static final Logger logger = LogManager.getLogger(DatabaseConnection.class);
 
@@ -21,18 +24,22 @@ public class DatabaseConnection {
     @PostConstruct
     public static void initialize() throws Exception {
         createConnection();
+
     }
 
     private static void createConnection() {
+        logger.info("Initialization");
         try {//   var propertyReader = new PropertyReader();
-            String jdbcDriver = "com.mysql.cj.jdbc.Driver"; //  propertyReader.getConfigPropValue("jdbc_driver").trim();
-            String dbURL = "jdbc:mysql://64.227.146.191/app"; //   propertyReader.getConfigPropValue("db_url").trim();
-            String username = "cdrp"; //  propertyReader.getConfigPropValue("dbUsername").trim();
-            String password = "Cdrp@1234";
-//            if (jdbcDriver.contains("mysql")) password = propertyReader.getConfigPropValue("dbPassword").trim();
-//            else password = decryptor(propertyReader.getConfigPropValue("dbEncyptPassword").trim());
-            Class.forName(jdbcDriver);
-            connection = DriverManager.getConnection(dbURL, username, password);
+//            String jdbcDriver = "com.mysql.cj.jdbc.Driver"; //  propertyReader.getConfigPropValue("jdbc_driver").trim();
+//            String dbURL = "jdbc:mysql://64.227.146.191/app"; //   propertyReader.getConfigPropValue("db_url").trim();
+//            String username = "cdrp"; //  propertyReader.getConfigPropValue("dbUsername").trim();
+//            String password = "Cdrp@1234";
+////            if (jdbcDriver.contains("mysql")) password = propertyReader.getConfigPropValue("dbPassword").trim();
+////            else password = decryptor(propertyReader.getConfigPropValue("dbEncyptPassword").trim());
+//            Class.forName(jdbcDriver);
+            //connection = DriverManager.getConnection(dbURL, username, password);
+            connection = SQLConnection.getConnection();
+            logger.info(" NEW Connection--- {}", connection);
         } catch (Exception e) {
             logger.error("Not able to conn {}", e.getLocalizedMessage());
         }

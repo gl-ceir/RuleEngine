@@ -22,7 +22,7 @@ public class PropertyReader {
     static Logger logger = LogManager.getLogger(PropertyReader.class);
 
     public String getConfigPropValue(String key) throws IOException {
-        prop = loadProperties(System.getenv("APP_HOME") + "/configuration/configuration.properties");
+        prop = loadProperties(System.getenv("commonConfigurationFilePath"));
         if (Objects.nonNull(prop)) {
             return prop.getProperty(key);
         } else {
@@ -30,16 +30,6 @@ public class PropertyReader {
         }
     }
 
-    public String getPropValue(String key) throws IOException {
-        prop = loadProperties(System.getProperty("user.dir") + "/conf.properties");
-        if (Objects.nonNull(prop)) {
-           return prop.getProperty(key)
-                    .replace("${EDR_APP_HOME}", System.getenv("EDR_APP_HOME"))
-                   .replace("${EDR_DATA_HOME}", System.getenv("EDR_DATA_HOME"));
-        } else {
-            return null;
-        }
-    }
 
     Properties loadProperties(String propFileName) {
         try {
