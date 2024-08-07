@@ -1,6 +1,7 @@
 package com.gl;
 
 
+import com.gl.connection.DatabaseConnection;
 import com.gl.rule_engine.RuleEngineApplication;
 import com.gl.rule_engine.RuleInfo;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +20,19 @@ import java.util.Map;
 public class RuleEngineAdaptor {
 
     static final Logger logger = LogManager.getLogger(RuleEngineAdaptor.class);
+
+
+    public static LinkedHashMap<String, Boolean> startAdaptor(Map device_info) {
+        Connection conn = null;
+        try {
+            conn = DatabaseConnection.getConnection();
+            logger.info("Checking Connection : {}", conn);
+        } catch (Exception e) {
+            logger.error("Not able to create  Connection : {}", conn);
+        }
+        return startAdaptor(conn, device_info);
+
+    }
 
     public static LinkedHashMap<String, Boolean> startAdaptor(Connection conn, Map device_info) {
         logger.info("Started RuleEngineAdaptor");
@@ -111,17 +125,17 @@ public class RuleEngineAdaptor {
 
     private static RuleInfo createRuleInfo(Map<String, String> device_info, RuleAttribute rule, Connection conn, Statement statement) {
         return new RuleInfo(device_info.get("appdbName"), device_info.get("auddbName"), device_info.get("repdbName"), device_info.get("edrappdbName"),
-                device_info.get("imei").length() >14 ? device_info.get("imei").substring(0,14) :device_info.get("imei")
+                device_info.get("imei").length() > 14 ? device_info.get("imei").substring(0, 14) : device_info.get("imei")
                 , device_info.get("msisdn"), device_info.get("imsi"),
-                rule.rule_name, "executeRule", device_info.get("feature"), rule.period, rule.action, device_info.get("operator"), device_info.get("file_name"), conn, statement , device_info.get("imei"));
+                rule.rule_name, "executeRule", device_info.get("feature"), rule.period, rule.action, device_info.get("operator"), device_info.get("file_name"), conn, statement, device_info.get("imei"));
     }
 
     private static RuleInfo createRuleActionInfo(Map<String, String> device_info, RuleAttribute rule, String output, Connection conn, Statement statement) {
         return new RuleInfo(device_info.get("appdbName"), device_info.get("auddbName"), device_info.get("repdbName"), device_info.get("edrappdbName"),
-                device_info.get("imei").length() >14 ? device_info.get("imei").substring(0,14) :device_info.get("imei")
+                device_info.get("imei").length() > 14 ? device_info.get("imei").substring(0, 14) : device_info.get("imei")
                 , device_info.get("msisdn"), device_info.get("imsi"),
                 rule.rule_name, "executeAction", device_info.get("feature"), rule.period, output.equalsIgnoreCase("NAN") ? "NAN" : rule.action,
-                device_info.get("operator"), device_info.get("file_name"), conn, statement , device_info.get("imei"));
+                device_info.get("operator"), device_info.get("file_name"), conn, statement, device_info.get("imei"));
     }
 
     private static RuleInfo createRuleActionInfo(Map<String, String> device_info, String fileArray, Connection conn, BufferedWriter bw, String output) {
