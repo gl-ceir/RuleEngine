@@ -1,5 +1,6 @@
 package com.gl.custom.service;
 
+import com.gl.custom.dao.CustomQuery;
 import com.gl.custom.model.AuthApiResponse;
 import com.gl.custom.model.CustomApiResponse;
 import com.google.gson.Gson;
@@ -9,6 +10,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -21,7 +23,7 @@ import java.sql.Connection;
 import java.time.Duration;
 import java.util.List;
 
-import static com.gl.custom.dao.CustomQuery.getValueFromSysParam;
+import static com.gl.custom.dao.CustomQuery.*;
 
 public class HttpApiConnection {
     private static final Logger logger = LogManager.getLogger(HttpApiConnection.class);
@@ -34,7 +36,7 @@ public class HttpApiConnection {
             var a = authenticationApi(conn);
             if (a != null && a.getStatusCodeValue() == 200) {
                 AuthApiResponse b = new Gson().fromJson(a.getBody(), AuthApiResponse.class);
-            //    insertIntoCustomAuthToken(b, conn);
+                insertIntoCustomAuthToken(b, conn);
                 return getCustomApiResponse(conn, imei, b.getAccess_token());
             } else {
                 return new CustomApiResponse("Error", "Client authentication failed");
@@ -43,11 +45,13 @@ public class HttpApiConnection {
 
     }
 
-    private static String getTokenDetails(Connection conn) {
-      //  String value = getValueFromCustomAuthToken(conn, "String tag");
-        return null;
+    private static void insertIntoCustomAuthToken(AuthApiResponse b, Connection conn) {
+        saveInGdceauthtoken(conn, b.getAccess_token(), b.getExpires_in());
     }
 
+    private static String getTokenDetails(Connection conn) {
+        return getTokenFromGdceAuthToken(conn);
+    }
 
     private static CustomApiResponse getCustomApiResponse(Connection conn, String imei, String token) {
         var c = taxCheckApi(conn, token, imei);
@@ -62,26 +66,34 @@ public class HttpApiConnection {
 
     private static ResponseEntity<String> taxCheckApi(Connection conn, String token, String imei) {
         var url = getValueFromSysParam(conn, "CustomCheckImeiApiUrlPath");
+        var camDxHeaderName = getValueFromSysParam(conn, "CamDxLayerHeaderName");
+        var camDxHeaderValue = getValueFromSysParam(conn, "CamDxLayerHeaderValue");
+
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         headers.setBearerAuth(token);
+        headers.set(camDxHeaderName, camDxHeaderValue);
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("imei", imei);
-        return httpConnectionForApp(url, headers, map);
+        return httpConnectionForApp(url, headers, map ,conn);
     }
 
     private static ResponseEntity<String> authenticationApi(Connection conn) {
         var url = getValueFromSysParam(conn, "CustomAuthApiUrlPath");
         var clientId = getValueFromSysParam(conn, "CustomAuthApiClientId");
         var secretKey = getValueFromSysParam(conn, "CustomAuthApiSecretKey");
+        var camDxHeaderName = getValueFromSysParam(conn, "CamDxLayerHeaderName");
+        var camDxHeaderValue = getValueFromSysParam(conn, "CamDxLayerHeaderValue");
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        headers.set(camDxHeaderName, camDxHeaderValue);
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("client_id", clientId);
         map.add("secret_key", secretKey);
         try {
-            ResponseEntity<String> response = httpConnectionForApp(url, headers, map);
+            ResponseEntity<String> response = httpConnectionForApp(url, headers, map,conn);
             logger.info(" Auth Response Code {} with  {}", response.getStatusCodeValue(), response.getBody());
             return response;
         } catch (Exception e) {
@@ -90,7 +102,9 @@ public class HttpApiConnection {
         }
     }
 
-    static ResponseEntity<String> httpConnectionForApp(String url, HttpHeaders headers, MultiValueMap<String, String> map) {
+
+
+    static ResponseEntity<String> httpConnectionForApp(String url, HttpHeaders headers, MultiValueMap<String, String> map,Connection conn) {
         try {
             logger.info("POST  Start Url-> " + url + " ;Body->" + map.toString() + " ::: Headers:" + headers);
             HttpEntity<MultiValueMap<String, String>> request = null;
@@ -104,6 +118,9 @@ public class HttpApiConnection {
             httpResponse = restTemplate.postForEntity(uri, request, String.class);
             logger.info("Request:" + url + " Body:" + map.toString() + " Response :" + httpResponse.getBody());
             return httpResponse;
+        } catch (HttpClientErrorException he) {
+            logger.error("HttpClientErrorException  " + he + " :: " + he.getResponseBodyAsString());
+            CustomQuery.deleteFromGdceAuthToken(conn);  // refactor
         } catch (Exception e) {
             logger.error("Not able to http Api  " + e + " :: " + e.getCause());
         }

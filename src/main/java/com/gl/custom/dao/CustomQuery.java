@@ -27,11 +27,51 @@ public class CustomQuery {
             while (rs.next()) {
                 response = rs.getString("value");
             }
+            logger.info("Query [[" + query + "]]. Response " + response);
         } catch (Exception e) {
             logger.error(e + ", [QUERY]" + query);
         }
         return response;
     }
+
+    public static String getTokenFromGdceAuthToken(Connection conn) {
+        String query = "select  token  from app.gdce_auth_token_detail where expire_on > CURRENT_TIMESTAMP order by id desc limit 1  ";
+        logger.info("Query " + query);
+        String response = null;
+        try (Statement st = conn.createStatement(); ResultSet rs = st.executeQuery(query)) {
+            while (rs.next()) {
+                response = rs.getString("token");
+            }
+            if (response == null)
+                deleteFromGdceAuthToken(conn);
+        } catch (Exception e) {
+            logger.error(e + ", [QUERY]" + query);
+        }
+        return response;
+    }
+
+    public static void deleteFromGdceAuthToken(Connection conn) {
+        String query = "delete from gdce_auth_token_detail ";
+        logger.info("Query " + query);
+        try (Statement st = conn.createStatement()) {
+            logger.info("delete from auth Token {} ", st.executeUpdate(query));
+        } catch (Exception e) {
+            logger.error(e + ", [QUERY] " + query);
+        }
+    }
+
+    public static void saveInGdceauthtoken(Connection conn, String token, String secs) {
+        deleteFromGdceAuthToken(conn);
+        String query = "insert into gdce_auth_token_detail (token , expire_on) values ( '" + token + "' , DATE_ADD(now(), INTERVAL " + secs + " - 50 second) ) ";
+        logger.info("Query " + query);
+        try (Statement st = conn.createStatement()) {
+            logger.info("inserting in gdce_api_call_history {} ", st.executeUpdate(query));
+        } catch (Exception e) {
+            logger.error(e + ", [QUERY]" + query);
+        }
+    }
+
+// insert into gdce_auth_token_detail (token , expire_on) values ( '124134' , DATE_ADD(now(), INTERVAL 5000 second) ) ;
 
 
     public static String checkInGdceData(Connection conn, String imei) {
