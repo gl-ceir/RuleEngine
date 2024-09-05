@@ -71,7 +71,16 @@ public interface RulesList {
                 new CUSTOM_IMEI(),
                 new STOLEN_DEVICE(),
 
-                new GREYLIST_BY_LOST_STOLEN()
+                new GREYLIST_BY_LOST_STOLEN(),
+
+                new BLOCKED_TAC(),
+                new BLACKLIST_DUPLICATE(),
+                new BLACKLIST_EIRSADMIN(),
+                new BLACKLIST_STOLEN(),
+                new BLACKLIST_PAIREXHAUST(),
+
+                new IMEI_ALPHANUMERIC()
+
         );
     }
 }

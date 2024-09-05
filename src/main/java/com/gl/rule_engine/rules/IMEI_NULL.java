@@ -5,15 +5,14 @@
  */
 package com.gl.rule_engine.rules;
 
+import com.gl.rule_engine.ExecutionInterface;
 import com.gl.rule_engine.RuleInfo;
-import java.sql.Connection;
-import java.io.BufferedWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import com.gl.rule_engine.ExecutionInterface;
+
+import java.sql.ResultSet;
 
 /**
- *
  * @author user
  */
 public class IMEI_NULL implements ExecutionInterface {
@@ -23,15 +22,22 @@ public class IMEI_NULL implements ExecutionInterface {
     @Override
     public String executeRule(RuleInfo ruleEngine) {
         String res = "";
-        try {
-            if ((ruleEngine.imei == null) || ruleEngine.imei == "" || ruleEngine.imei.contains("00000000")) {
-                res = "Yes";
-            } else {
-                res = "No";
+        String pattern = "999999999999999";
+        logger.info("CONNNN " + ruleEngine.connection + "ACTUAL " + ruleEngine.actualImei);
+        try (var stt = ruleEngine.connection.createStatement(); ResultSet rs = stt.executeQuery("select value from sys_param where tag ='CDR_NULL_IMEI_REPLACE_PATTERN'")) {
+            while (rs.next()) {
+                pattern = rs.getString("value");
             }
         } catch (Exception e) {
-            logger.error("Error.." + e);
+            logger.error(e + e.getLocalizedMessage());
         }
+        if ((ruleEngine.actualImei == null) || ruleEngine.actualImei.equals("") || ruleEngine.actualImei.equalsIgnoreCase(pattern)) {
+            res = "Yes";
+        } else {
+            res = "No";
+        }
+        logger.debug("NULL response : if Yes then Fails ::  " + res);
+
         return res;
     }
 

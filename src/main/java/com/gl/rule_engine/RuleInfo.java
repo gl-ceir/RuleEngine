@@ -39,7 +39,6 @@ public class RuleInfo {
     public Statement statement;
     public BufferedWriter bw;
 
-
     public RuleInfo() {
     }
 
@@ -49,7 +48,7 @@ public class RuleInfo {
     }
 
     public RuleInfo(String ruleName, String app, String executeRuleAction, String imei, Connection connection,
-                    String source, Statement stmt) {
+                    String source, Statement stmt ,String actualImei) {
         this.imei = imei;
         this.ruleName = ruleName;
         this.executeRuleAction = executeRuleAction;
@@ -57,7 +56,10 @@ public class RuleInfo {
         this.connection = connection;
         this.source = source;
         this.statement = stmt;
+        this.actualImei=actualImei;
     }
+
+
 
     public RuleInfo(String ruleName, String app, String executeRuleAction, String imei, Connection connection,
                     String source, String action, Statement stmt) {
@@ -73,7 +75,7 @@ public class RuleInfo {
 
 
 
-    public RuleInfo(String app, String aud, String rep, String ruleName, String executeRuleAction, String featureName, String imei, String sNofDevice, String fileName, String deviceType, String operator, String deviceIdType, String operatorTag, String msisdn, String action, String imsi, String recordType, String systemType, String source, String rawCdrFileName, String imeiArrivalTime, String txn_id, String fileArray, String period, Connection connection, BufferedWriter bw) {
+    public RuleInfo(String app, String aud, String rep, String ruleName, String executeRuleAction, String featureName, String imei, String sNofDevice, String fileName, String deviceType, String operator, String deviceIdType, String operatorTag, String msisdn, String action, String imsi, String recordType, String systemType, String source, String rawCdrFileName, String imeiArrivalTime, String txn_id, String fileArray, String period, Connection connection, BufferedWriter bw  ,String actualImei) {
         this.app = app;
         this.aud = aud;
         this.rep = rep;
@@ -100,6 +102,7 @@ public class RuleInfo {
         this.period = period;
         this.connection = connection;
         this.bw = bw;
+        this.actualImei=actualImei;
     }
 
 

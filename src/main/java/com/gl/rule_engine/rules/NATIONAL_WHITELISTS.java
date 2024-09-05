@@ -29,7 +29,7 @@ public class NATIONAL_WHITELISTS implements ExecutionInterface {
     @Override
     public String executeAction(RuleInfo ruleEngine) {
         try {
-            logger.debug("Action::: " + ruleEngine.action);
+            logger.info("Action::: " + ruleEngine.action);
             switch (ruleEngine.action) {
                 case "Allow": {
                     logger.debug("Action is Allow");

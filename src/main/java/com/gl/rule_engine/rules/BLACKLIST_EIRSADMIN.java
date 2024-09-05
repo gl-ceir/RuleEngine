@@ -1,30 +1,31 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.gl.rule_engine.rules;
 
-import com.gl.custom.CustomCheck;
 import com.gl.rule_engine.ExecutionInterface;
 import com.gl.rule_engine.RuleInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class CUSTOM_GDCE implements ExecutionInterface {
+import java.sql.ResultSet;
 
-    static final Logger logger = LogManager.getLogger(CUSTOM_GDCE.class);
+public class BLACKLIST_EIRSADMIN implements ExecutionInterface {
+
+    static final Logger logger = LogManager.getLogger(BLACKLIST_EIRSADMIN.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        logger.info("actual imei is -> "+ ruleEngine.actualImei);
-        var a = CustomCheck.identifyCustomComplianceStatus(ruleEngine.connection, ruleEngine.actualImei, ruleEngine.source);
-        if (a.equalsIgnoreCase("true")) {
-            return "Yes";
-        } else {
-            return "No";
+        String query = "select *  from " + ruleEngine.app + ".black_list where source like '%EIRSADMIN%'  and imei  like '" + ruleEngine.imei + "%' ";
+        logger.debug("Query " + query);
+        var response = "NO";
+        try (ResultSet rs = ruleEngine.statement.executeQuery(query)) {
+            while (rs.next()) {
+                response = "YES";
+            }
+        } catch (Exception e) {
+            logger.error(e.toString() + ", [QUERY]" + query);
         }
+        return response;
     }
+
 
     @Override
     public String executeAction(RuleInfo ruleEngine) {
@@ -39,10 +40,6 @@ public class CUSTOM_GDCE implements ExecutionInterface {
                 }
                 break;
                 case "Reject": {
-                    logger.debug("Action is Reject");
-                    String fileString = ruleEngine.fileArray + " , Error Code :CON_RULE_0009, Error Description : IMEI/ESN/MEID is already present in the system  ";
-                    ruleEngine.bw.write(fileString);
-                    ruleEngine.bw.newLine();
                 }
                 break;
                 case "Block": {
@@ -51,7 +48,6 @@ public class CUSTOM_GDCE implements ExecutionInterface {
                 break;
                 case "Report": {
                     logger.debug("Action is Report");
-
                 }
                 break;
                 case "SYS_REG": {
