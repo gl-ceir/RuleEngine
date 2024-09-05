@@ -17,6 +17,7 @@ public class CUSTOM_GDCE implements ExecutionInterface {
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
+        logger.info("actual imei is -> "+ ruleEngine.actualImei);
         var a = CustomCheck.identifyCustomComplianceStatus(ruleEngine.connection, ruleEngine.actualImei, ruleEngine.source);
         if (a.equalsIgnoreCase("true")) {
             return "Yes";
@@ -39,7 +40,6 @@ public class CUSTOM_GDCE implements ExecutionInterface {
                 break;
                 case "Reject": {
                     logger.debug("Action is Reject");
-
                     String fileString = ruleEngine.fileArray + " , Error Code :CON_RULE_0009, Error Description : IMEI/ESN/MEID is already present in the system  ";
                     ruleEngine.bw.write(fileString);
                     ruleEngine.bw.newLine();

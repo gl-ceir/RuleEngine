@@ -145,7 +145,7 @@ public class RuleEngineAdaptor {
                 device_info.get("DeviceType"), device_info.get("operator"), device_info.get("DeviceIdType"), device_info.get("operator_tag"), device_info.get("msisdn"),
                 output.equalsIgnoreCase("NAN") ? "NAN" : device_info.get("action"),
                 "", "", "", device_info.get("operator"),
-                "", "", device_info.get("txn_id"), fileArray, device_info.get("period"), conn, bw);
+                "", "", device_info.get("txn_id"), fileArray, device_info.get("period"), conn, bw, device_info.get("IMEIESNMEID"));
     }
 }
 

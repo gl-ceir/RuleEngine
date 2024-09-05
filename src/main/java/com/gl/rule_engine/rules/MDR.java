@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.ResultSet;
-import java.sql.Statement;
 
 public class MDR implements ExecutionInterface {
 
@@ -17,7 +16,7 @@ public class MDR implements ExecutionInterface {
         String query = "select * from  " + ruleEngine.app + ".mobile_device_repository where device_id='" + ruleEngine.imei.substring(0, 8) + "' ";
         logger.debug("Query " + query);
         var response = "NO";
-        try ( ResultSet rs =ruleEngine.statement.executeQuery(query)) {
+        try (var stt = ruleEngine.connection.createStatement(); ResultSet rs = stt.executeQuery(query)) {
             while (rs.next()) {
                 response = "YES";
             }
@@ -33,22 +32,22 @@ public class MDR implements ExecutionInterface {
         try {
             switch (ruleEngine.action) {
                 case "Allow": {
-                    logger.debug("Action is Allow");
+                    logger.info("Action is Allow");
                 }
                 break;
                 case "Skip": {
-                    logger.debug("Action is Skip");
+                    logger.info("Action is Skip");
                 }
                 break;
                 case "Reject": {
                 }
                 break;
                 case "Block": {
-                    logger.debug("Action is Block");
+                    logger.info("Action is Block");
                 }
                 break;
                 case "Report": {
-                    logger.debug("Action is Report");
+                    logger.info("Action is Report");
                 }
                 break;
                 case "SYS_REG": {

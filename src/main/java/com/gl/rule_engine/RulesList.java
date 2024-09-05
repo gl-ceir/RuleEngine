@@ -77,7 +77,9 @@ public interface RulesList {
                 new BLACKLIST_DUPLICATE(),
                 new BLACKLIST_EIRSADMIN(),
                 new BLACKLIST_STOLEN(),
-                new BLACKLIST_PAIREXHAUST()
+                new BLACKLIST_PAIREXHAUST(),
+
+                new IMEI_ALPHANUMERIC()
 
         );
     }

@@ -10,17 +10,17 @@ import com.gl.rule_engine.RuleInfo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class IMEI_LENGTH implements ExecutionInterface {
+public class IMEI_ALPHANUMERIC implements ExecutionInterface {
 
-    static final Logger logger = LogManager.getLogger(IMEI_LENGTH.class);
+    static final Logger logger = LogManager.getLogger(IMEI_ALPHANUMERIC.class);
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
         String res = "No";
-        if (ruleEngine.actualImei.length() == 14 || ruleEngine.actualImei.length() == 15 || ruleEngine.actualImei.length() == 16) {
+        if (!ruleEngine.actualImei.matches("^[ 0-9 ]+$")) {  // imei.matches("^[ 0-9 ]+$"
             res = "Yes";
         }
-        logger.info("IMEI_LENGTH " + ruleEngine.actualImei + "::" + ruleEngine.actualImei.length() + "::RESPONSE  if NO then fail ::" + res);
+        logger.debug("IMEI_ALPHANUMERIC response : if Yes then Fails ::  " + res);
         return res;
     }
 

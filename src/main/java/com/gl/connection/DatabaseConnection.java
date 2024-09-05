@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.sql.Connection;
-import java.sql.DriverManager;
 
 @Component
 public class DatabaseConnection {
@@ -16,6 +15,7 @@ public class DatabaseConnection {
 
     private DatabaseConnection() {
     }
+
     private static Connection connection = null;
 
     @PostConstruct
@@ -24,15 +24,8 @@ public class DatabaseConnection {
     }
 
     private static void createConnection() {
-        try {//   var propertyReader = new PropertyReader();
-            String jdbcDriver = "com.mysql.cj.jdbc.Driver"; //  propertyReader.getConfigPropValue("jdbc_driver").trim();
-            String dbURL = "jdbc:mysql://64.227.146.191/app"; //   propertyReader.getConfigPropValue("db_url").trim();
-            String username = "cdrp"; //  propertyReader.getConfigPropValue("dbUsername").trim();
-            String password = "Cdrp@1234";
-//            if (jdbcDriver.contains("mysql")) password = propertyReader.getConfigPropValue("dbPassword").trim();
-//            else password = decryptor(propertyReader.getConfigPropValue("dbEncyptPassword").trim());
-            Class.forName(jdbcDriver);
-            connection = DriverManager.getConnection(dbURL, username, password);
+        try {
+            connection = SQLConnection.getConnection();
         } catch (Exception e) {
             logger.error("Not able to conn {}", e.getLocalizedMessage());
         }
