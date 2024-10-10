@@ -11,8 +11,6 @@
     </parent>
 
     <groupId>com.gl</groupId>
-    <!--    <artifactId>RuleEngine</artifactId>-->
-    <!--    <version>1.1</version>-->
     <artifactId>RuleEngine</artifactId>
     <version>1.1</version>
     <name>Rule_engine</name>

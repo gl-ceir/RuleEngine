@@ -42,7 +42,6 @@ public class SQLConnection {
         }
     }
 
-
     public static String decryptor(String encryptedText) {
         BasicTextEncryptor encryptor = new BasicTextEncryptor();
         encryptor.setPassword(System.getenv("JASYPT_ENCRYPTOR_PASSWORD"));

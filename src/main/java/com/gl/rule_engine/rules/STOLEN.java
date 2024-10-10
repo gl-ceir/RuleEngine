@@ -14,8 +14,14 @@ public class STOLEN implements ExecutionInterface {
 
     @Override
     public String executeRule(RuleInfo ruleEngine) {
-        String query = "select *  from " + ruleEngine.app + ".lost_device_detail where imei like '" + ruleEngine.imei + "%' ";
-        logger.debug("Query " + query);
+        String query = "SELECT 1  FROM lost_device_mgmt WHERE " +
+                "(imei1 like '" + ruleEngine.imei + "%' OR imei2 like '" + ruleEngine.imei + "%' OR imei3 like '" + ruleEngine.imei + "%' OR imei4 like '" + ruleEngine.imei + "%')  " +
+                " AND status IN ('INIT', 'VERIFY_MOI', 'START')  AND  request_type in('Lost' ,'Stolen')" +
+                "  union" +
+                " SELECT 1  FROM lost_device_detail where imei like '" + ruleEngine.imei + "%' " +
+                " and ( request_type like '%STOLEN%' or request_type like '%LOST%' )"
+        // String query = "select *  from " + ruleEngine.app + ".lost_device_detail where imei like '" + ruleEngine.imei + "%' ";
+        logger.info("Query " + query);
         var response = "NO";
         try (ResultSet rs = ruleEngine.statement.executeQuery(query)) {
             while (rs.next()) {
