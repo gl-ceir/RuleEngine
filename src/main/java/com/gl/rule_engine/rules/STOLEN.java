@@ -19,7 +19,7 @@ public class STOLEN implements ExecutionInterface {
                 " AND status IN ('INIT', 'VERIFY_MOI', 'START')  AND  request_type in('Lost' ,'Stolen')" +
                 "  union" +
                 " SELECT 1  FROM lost_device_detail where imei like '" + ruleEngine.imei + "%' " +
-                " and ( request_type like '%STOLEN%' or request_type like '%LOST%' )"
+                " and ( request_type like '%STOLEN%' or request_type like '%LOST%' )" ;
         // String query = "select *  from " + ruleEngine.app + ".lost_device_detail where imei like '" + ruleEngine.imei + "%' ";
         logger.info("Query " + query);
         var response = "NO";
