@@ -58,7 +58,16 @@ public class RuleInfo {
         this.statement = stmt;
         this.actualImei=actualImei;
     }
-
+  public RuleInfo(String ruleName, String app, String executeRuleAction, String imei, Connection connection,
+                    String source, Statement stmt ) {
+        this.imei = imei;
+        this.ruleName = ruleName;
+        this.executeRuleAction = executeRuleAction;
+        this.app = app;
+        this.connection = connection;
+        this.source = source;
+        this.statement = stmt;
+    }
 
 
     public RuleInfo(String ruleName, String app, String executeRuleAction, String imei, Connection connection,
